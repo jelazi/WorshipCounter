@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">WorshipCounter</string>
+    <string name="button2">Button</string>
 </resources>

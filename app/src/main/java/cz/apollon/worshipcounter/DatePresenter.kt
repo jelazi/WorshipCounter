@@ -15,10 +15,20 @@ class DatePresenter {
         var nameMonth = getNameMonth(month)
 
         fun getCurrentDate(): String {
-
-            var currentDate : String = ""
-            currentDate = "" + nameDay + " " + day + ". " + month + ". " + year
+            var currentDate : String = "" + nameDay + " " + day + ". " + month + ". " + year
             return currentDate
+        }
+
+        fun getCurrentYear(): Int {
+            return c.get(Calendar.YEAR)
+        }
+
+        fun getCurrentMonth(): Int {
+            return c.get(Calendar.MONTH)
+        }
+
+        fun getCurrentDay(): Int {
+            return c.get(Calendar.DATE)
         }
 
         fun getSelectedDate(selectedYear: Int, selectedMonth: Int, selectedDay: Int): String{
@@ -63,11 +73,5 @@ class DatePresenter {
             }
             return ""
         }
-
-
     }
-
-
-
-
 }
