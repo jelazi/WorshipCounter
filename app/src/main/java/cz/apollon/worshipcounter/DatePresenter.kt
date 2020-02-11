@@ -1,5 +1,7 @@
 package cz.apollon.worshipcounter
 
+import java.time.LocalDate
+import java.time.Month
 import java.util.*
 
 class DatePresenter {
@@ -12,10 +14,10 @@ class DatePresenter {
         val day = c.get(Calendar.DAY_OF_MONTH)
         val dayOfWeek = c.get(Calendar.DAY_OF_WEEK)
         var nameDay = getNameDayOfWeek(dayOfWeek)
-        var nameMonth = getNameMonth(month)
+        var date: DateSong = DateSong(day, month, year)
 
         fun getCurrentDate(): String {
-            var currentDate : String = "" + nameDay + " " + day + ". " + month + ". " + year
+            var currentDate : String = "" + nameDay + " " + day + ". " + getNameMonth(month) + ". " + year
             return currentDate
         }
 
@@ -58,18 +60,18 @@ class DatePresenter {
 
         private fun getNameMonth(month: Int): String {
             when (month) {
-                0->return "Leden"
-                1->return "Únor"
-                2->return "Březen"
-                3->return "Duben"
-                4->return "Květen"
-                5->return "Červen"
-                6->return "Červenec"
-                7->return "Srpen"
-                8->return "Září"
-                9->return "Říjen"
-                10->return "Listopad"
-                11->return "Prosinec"
+                0->return "leden"
+                1->return "únor"
+                2->return "březen"
+                3->return "duben"
+                4->return "květen"
+                5->return "červen"
+                6->return "červenec"
+                7->return "srpen"
+                8->return "září"
+                9->return "říjen"
+                10->return "listopad"
+                11->return "prosinec"
             }
             return ""
         }

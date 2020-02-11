@@ -5,23 +5,27 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
-    var button: Button? = null
     var lblDate: TextView? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        button = findViewById(R.id.button)
-        lblDate = findViewById(R.id.textView)
-     initItems()
+        lblDate = findViewById(R.id.label_date)
+        initItems()
+        SongManager.createDefaultSongBook()
+        var list = SongBook.listBook
+        datePicker()
+
+
+
     }
 
     fun initItems() {
-        val onClickListener = button?.setOnClickListener {
+        val onClickListener = lblDate?.setOnClickListener {
             datePicker()
         }
         lblDate?.setText(DatePresenter.getCurrentDate())
