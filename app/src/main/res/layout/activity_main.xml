@@ -23,10 +23,16 @@
             android:text="Datum" />
 
         <Button
-            android:id="@+id/button2"
+            android:id="@+id/btnSongPreview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/button2" />
+            android:text="Song Preview" />
+
+        <Button
+            android:id="@+id/btnSongBookPreview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="SongBook Preview" />
 
     </LinearLayout>
 
