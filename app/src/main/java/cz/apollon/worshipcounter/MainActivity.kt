@@ -23,8 +23,12 @@ class MainActivity : AppCompatActivity() {
         btnSongBookPreview = findViewById(R.id.btnSongBookPreview)
         initItems()
         SongManager.createDefaultSongBook()
-        var list = SongBook.listBook
+
+
         datePicker()
+
+
+
         var jsonListBook = JsonParser.listBookToJson()
         var listBook = JsonParser.jsonToListBook(jsonListBook)
 

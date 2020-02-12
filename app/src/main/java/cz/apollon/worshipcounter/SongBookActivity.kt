@@ -23,11 +23,15 @@ class SongBookActivity : AppCompatActivity() {
         searchBar.setHint("Search..")
         searchBar.setSpeechMode(true)
 
-        var songBookNames = SongManager.getSongbookNames()
+        var songBookNames = SongManager.getSongbookItems("name")
+        var songBookIDs = SongManager.getSongbookItems("lastDate")
+        var songBookPages = SongManager.getSongbookItems("page")
+
+
 
         //ADAPTER
-        val adapter = ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, songBookNames)
-        lv.setAdapter(adapter)
+        val songListadapter = SongListAdapter(this, songBookPages, songBookNames, songBookIDs)
+        lv.setAdapter(songListadapter)
 
         //SEARCHBAR TEXT CHANGE LISTENER
         searchBar.addTextChangeListener(object : TextWatcher {
@@ -37,7 +41,7 @@ class SongBookActivity : AppCompatActivity() {
 
             override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
                 //SEARCH FILTER
-                adapter.getFilter().filter(charSequence)
+                songListadapter.getFilter().filter(charSequence)
             }
 
             override fun afterTextChanged(editable: Editable) {
@@ -48,7 +52,7 @@ class SongBookActivity : AppCompatActivity() {
         //LISTVIEW ITEM CLICKED
         lv.setOnItemClickListener(object : AdapterView.OnItemClickListener {
             override fun onItemClick(adapterView: AdapterView<*>, view: View, i: Int, l: Long) {
-                Toast.makeText(this@SongBookActivity, adapter.getItem(i)!!.toString(), Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@SongBookActivity, songListadapter.getItem(i)!!.toString(), Toast.LENGTH_SHORT).show()
             }
         })
 

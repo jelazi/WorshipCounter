@@ -47,11 +47,30 @@ object SongManager {
         SongBook.addSong(song20)
     }
 
-    fun getSongbookNames (): Array<String> {
+    fun getSongbookItems (nameItems: String): Array<String> {
         var songbookNames: Array<String> = arrayOf()
-        SongBook.listBook.forEach {
-            songbookNames += it.name
+        if (nameItems == "name") {
+            SongBook.listBook.forEach {
+                songbookNames += it.name
+            }
+        } else if (nameItems == "ID") {
+            SongBook.listBook.forEach {
+                songbookNames += it.ID.toString()
+            }
+        } else if (nameItems == "page") {
+            SongBook.listBook.forEach {
+                songbookNames += it.page.toString()
+            }
+        } else if (nameItems == "lastDate") {
+            SongBook.listBook.forEach {
+                if (it.useDates.isEmpty()) {
+                    songbookNames += "---"
+                } else {
+                    songbookNames += it.useDates.last().toString()
+                }
+            }
         }
+
         return songbookNames
     }
 
