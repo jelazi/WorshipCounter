@@ -7,6 +7,7 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 
+
 class MainActivity : AppCompatActivity() {
 
     var lblDate: TextView? = null
@@ -24,7 +25,17 @@ class MainActivity : AppCompatActivity() {
         SongManager.createDefaultSongBook()
         var list = SongBook.listBook
         datePicker()
+        var jsonListBook = JsonParser.listBookToJson()
+        var listBook = JsonParser.jsonToListBook(jsonListBook)
 
+        listBook.remove(listBook[0])
+        listBook[1].name = "kd fjas j"
+        SongBook.listBook.remove(SongBook.listBook[3])
+        SongBook.listBook[4].name = "dfaskjf k"
+
+        var isSame = SongManager.compareListBooks(SongBook.listBook, listBook)
+        var changingSongs = SongManager.getChangingSongs(SongBook.listBook, listBook, true)
+        var hello = ""
 
 
     }
@@ -61,6 +72,8 @@ class MainActivity : AppCompatActivity() {
 // start your next activity
         startActivity(intent)
     }
+
+
 
 }
 

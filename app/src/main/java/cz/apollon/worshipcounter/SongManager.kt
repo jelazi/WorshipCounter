@@ -54,4 +54,44 @@ object SongManager {
         }
         return songbookNames
     }
+
+
+    fun compareListBooks (firstBook: ArrayList<Song>, secondBook: ArrayList<Song>):Boolean {
+        var isID: Boolean = false
+        firstBook.forEach {
+            var firstSong = it
+            isID = false
+            secondBook.forEach {
+                if (firstSong.ID == it.ID) {
+                    isID = true
+                    if (!it.compare(firstSong)) return false
+                }
+            }
+            if (!isID) return false
+        }
+        return true
+    }
+
+
+    fun getChangingSongs (firstBook: ArrayList<Song>, secondBook: ArrayList<Song>, isRecursive: Boolean):ArrayList<Song> {
+        var changingSongs: ArrayList<Song> = arrayListOf()
+        var isID: Boolean = false
+        firstBook.forEach {
+            var firstSong = it
+            isID = false
+            secondBook.forEach {
+                if (firstSong.ID == it.ID) {
+                    isID = true
+                    if (!it.compare(firstSong) && !it.existsInListBook(changingSongs)) changingSongs.add(firstSong)
+                }
+            }
+            if (!isID && !firstSong.existsInListBook(changingSongs)) changingSongs.add(firstSong)
+        }
+        if (isRecursive) {
+            changingSongs.addAll(getChangingSongs(secondBook, firstBook, false))
+
+        }
+        return changingSongs
+    }
+
 }
