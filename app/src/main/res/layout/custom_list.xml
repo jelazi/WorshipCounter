@@ -6,31 +6,43 @@
 
     <LinearLayout
         android:orientation="horizontal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:weightSum="10"
-        android:gravity="center" >
+        android:layout_width="match_parent"
+        android:layout_height="60sp"
+        android:gravity="center_vertical" >
             <TextView
                 android:id="@+id/page"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="2"/>
+                android:text="page"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp" />
 
             <TextView
                 android:id="@+id/title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:inputType="textMultiLine"
+                android:scrollHorizontally="false"
+                android:maxLines="2"
                 android:text="title"
-                android:textStyle="bold"
-                android:layout_weight="6"/>
+                android:textStyle="bold" />
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            />
 
             <TextView
                 android:id="@+id/last_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="description"
-                android:textSize="16sp"
-                android:layout_weight="2"/>
+                android:text="last_date"
+                android:gravity="end"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:textSize="16sp" />
 
     </LinearLayout>
 </LinearLayout>

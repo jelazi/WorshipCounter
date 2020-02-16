@@ -5,10 +5,7 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.ListView
-import android.widget.Toast
+import android.widget.*
 import com.mancj.materialsearchbar.MaterialSearchBar
 
 class SongBookActivity : AppCompatActivity() {
@@ -24,13 +21,13 @@ class SongBookActivity : AppCompatActivity() {
         searchBar.setSpeechMode(true)
 
         var songBookNames = SongManager.getSongbookItems("name")
-        var songBookIDs = SongManager.getSongbookItems("lastDate")
+        var songBookLastDate = SongManager.getSongbookItems("lastDate")
         var songBookPages = SongManager.getSongbookItems("page")
 
 
 
         //ADAPTER
-        val songListadapter = SongListAdapter(this, songBookPages, songBookNames, songBookIDs)
+        val songListadapter = SongListAdapter(this, songBookPages, songBookNames, songBookLastDate)
         lv.setAdapter(songListadapter)
 
         //SEARCHBAR TEXT CHANGE LISTENER
@@ -58,4 +55,8 @@ class SongBookActivity : AppCompatActivity() {
 
         //end
     }
+
+
+
+
 }

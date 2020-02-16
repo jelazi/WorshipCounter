@@ -25,7 +25,8 @@ class MainActivity : AppCompatActivity() {
         SongManager.createDefaultSongBook()
 
 
-        datePicker()
+      //  datePicker()
+        openSongBookPreview()
 
 
 

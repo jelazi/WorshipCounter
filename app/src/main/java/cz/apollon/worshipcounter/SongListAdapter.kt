@@ -5,7 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 
-class SongListAdapter (private val context: Activity, private val name: Array<String>, private val lastDate: Array<String>, private val page: Array<String>)
+class SongListAdapter (private val context: Activity, private val page: Array<String>, private val name: Array<String>, private val lastDate: Array<String>)
     : ArrayAdapter<String>(context, R.layout.custom_list, name)  {
 
     override fun getView(position: Int, view: View?, parent: ViewGroup): View {
