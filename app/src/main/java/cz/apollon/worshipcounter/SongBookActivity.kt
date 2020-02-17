@@ -1,14 +1,21 @@
 package cz.apollon.worshipcounter
 
-import androidx.appcompat.app.AppCompatActivity
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
-import android.widget.*
+import android.widget.AdapterView
+import android.widget.ListView
+import androidx.appcompat.app.AppCompatActivity
 import com.mancj.materialsearchbar.MaterialSearchBar
 
+
+
 class SongBookActivity : AppCompatActivity() {
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -19,6 +26,8 @@ class SongBookActivity : AppCompatActivity() {
         val searchBar = findViewById(R.id.searchBar) as MaterialSearchBar
         searchBar.setHint("Search..")
         searchBar.setSpeechMode(true)
+
+
 
         var songBookNames = SongManager.getSongbookItems("name")
         var songBookLastDate = SongManager.getSongbookItems("lastDate")
@@ -49,14 +58,22 @@ class SongBookActivity : AppCompatActivity() {
         //LISTVIEW ITEM CLICKED
         lv.setOnItemClickListener(object : AdapterView.OnItemClickListener {
             override fun onItemClick(adapterView: AdapterView<*>, view: View, i: Int, l: Long) {
-                Toast.makeText(this@SongBookActivity, songListadapter.getItem(i)!!.toString(), Toast.LENGTH_SHORT).show()
+               // Toast.makeText(this@SongBookActivity, songListadapter.getItem(i)!!.toString(), Toast.LENGTH_SHORT).show()
+                val resultIntent = Intent()
+                resultIntent.putExtra(name, songBookNames.get(i))
+
+                setResult(Activity.RESULT_OK, resultIntent)
+                finish()
             }
         })
 
         //end
     }
 
-
+    companion object {
+        @JvmField
+        val name = ""
+    }
 
 
 }

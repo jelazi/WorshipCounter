@@ -6,9 +6,37 @@
     android:layout_height="match_parent"
     tools:context=".SongActivity">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/nameSong"
+            android:layout_width="match_parent"
+            android:layout_height="60sp"
+            android:textAlignment="center"
+            android:textSize="40sp"
+            android:text="Name of Song" />
+
+        <TextView
+            android:id="@+id/pageSong"
+            android:layout_width="match_parent"
+            android:layout_height="60sp"
+            android:textAlignment="center"
+            android:textSize="40sp"
+            android:text="Page of Song" />
+
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </LinearLayout>
+
     <Button
         android:id="@+id/button"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Button" />
+        android:text="Save Song"
+        tools:layout_editor_absoluteX="142dp"
+        tools:layout_editor_absoluteY="126dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>
