@@ -58,7 +58,7 @@ class DatePresenter {
             return ""
         }
 
-        private fun getNameMonth(month: Int): String {
+        fun getNameMonth(month: Int): String {
             when (month) {
                 0->return "leden"
                 1->return "únor"

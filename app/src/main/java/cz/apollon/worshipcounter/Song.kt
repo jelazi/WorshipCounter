@@ -21,4 +21,14 @@ class Song (var name: String, var page: Int){
         return false
     }
 
+    fun getLastDate (): DateSong? {
+        var lastDate: DateSong? = null
+        if (useDates.isEmpty()) return null
+        lastDate = useDates.get(0)
+        useDates.forEach {
+            if (it.compareTo(lastDate!!) == 1) lastDate = it
+        }
+        return lastDate
+    }
+
 }

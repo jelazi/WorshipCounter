@@ -5,10 +5,25 @@ object SongManager {
 
     fun createDefaultSongBook () {
         var song1 = Song("Ať požehnán je Bůh", 1)
+        song1.useDates.add(DateSong(20, 12, 2012))
+        song1.useDates.add(DateSong(21, 12, 2012))
+        song1.useDates.add(DateSong(20, 1, 2012))
         var song2 = Song("Dobrořeč duše má Hospodinu", 2)
+        song2.useDates.add(DateSong(13, 5, 2020))
+        song2.useDates.add(DateSong(30, 6, 2020))
+        song2.useDates.add(DateSong(8, 2, 2020))
         var song3 = Song("Haleluja, sláva", 3)
+        song3.useDates.add(DateSong(20, 12, 2018))
+        song3.useDates.add(DateSong(21, 12, 2018))
+        song3.useDates.add(DateSong(20, 1, 2018))
         var song4 = Song("Hosana - Už vidím krále slávy", 4)
+        song4.useDates.add(DateSong(1, 5, 2011))
+        song4.useDates.add(DateSong(2, 5, 2011))
+        song4.useDates.add(DateSong(3, 1, 2011))
         var song5 = Song("Chceme Ti říct", 5)
+        song5.useDates.add(DateSong(1, 1, 2019))
+        song5.useDates.add(DateSong(2, 12, 2019))
+        song5.useDates.add(DateSong(3, 4, 2019))
         var song6 = Song("Chceš-li víru mít", 6)
         var song7 = Song("Chtěl bych blíž Tě mít. Jsi vším, co mám", 7)
         var song8 = Song("Chval ho, ó duše má", 8)
@@ -66,7 +81,7 @@ object SongManager {
                 if (it.useDates.isEmpty()) {
                     songbookNames += "---"
                 } else {
-                    songbookNames += it.useDates.last().toString()
+                    songbookNames += it.getLastDate().toString()
                 }
             }
         }

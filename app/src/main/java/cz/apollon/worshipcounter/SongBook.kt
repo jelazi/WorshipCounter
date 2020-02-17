@@ -47,4 +47,12 @@ object SongBook {
         }
         return false
     }
+
+    fun sortByLastDate () {
+        var sortedList = listBook.sortedWith(compareBy {  it.getLastDate()})
+        listBook = arrayListOf()
+        sortedList.forEach {
+            listBook.add(it)
+        }
+    }
 }

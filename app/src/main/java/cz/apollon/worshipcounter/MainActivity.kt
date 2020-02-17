@@ -23,23 +23,24 @@ class MainActivity : AppCompatActivity() {
         btnSongBookPreview = findViewById(R.id.btnSongBookPreview)
         initItems()
         SongManager.createDefaultSongBook()
-
+        SongBook.sortByLastDate()
+        var list = SongBook.listBook
 
       //  datePicker()
         openSongBookPreview()
 
 
 
-        var jsonListBook = JsonParser.listBookToJson()
-        var listBook = JsonParser.jsonToListBook(jsonListBook)
+   //     var jsonListBook = JsonParser.listBookToJson()
+    //    var listBook = JsonParser.jsonToListBook(jsonListBook)
 
-        listBook.remove(listBook[0])
-        listBook[1].name = "kd fjas j"
-        SongBook.listBook.remove(SongBook.listBook[3])
-        SongBook.listBook[4].name = "dfaskjf k"
+      //  listBook.remove(listBook[0])
+      //  listBook[1].name = "kd fjas j"
+      //  SongBook.listBook.remove(SongBook.listBook[3])
+      //  SongBook.listBook[4].name = "dfaskjf k"
 
-        var isSame = SongManager.compareListBooks(SongBook.listBook, listBook)
-        var changingSongs = SongManager.getChangingSongs(SongBook.listBook, listBook, true)
+    //    var isSame = SongManager.compareListBooks(SongBook.listBook, listBook)
+    //    var changingSongs = SongManager.getChangingSongs(SongBook.listBook, listBook, true)
         var hello = ""
 
 
