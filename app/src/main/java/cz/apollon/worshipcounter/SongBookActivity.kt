@@ -58,10 +58,11 @@ class SongBookActivity : AppCompatActivity() {
         //LISTVIEW ITEM CLICKED
         lv.setOnItemClickListener(object : AdapterView.OnItemClickListener {
             override fun onItemClick(adapterView: AdapterView<*>, view: View, i: Int, l: Long) {
-               // Toast.makeText(this@SongBookActivity, songListadapter.getItem(i)!!.toString(), Toast.LENGTH_SHORT).show()
                 val resultIntent = Intent()
-                resultIntent.putExtra(name, songBookNames.get(i))
+                var choiceSong = Book.songBook.get(i)
 
+                resultIntent.putExtra(name, choiceSong.name)
+                resultIntent.putExtra(ID, choiceSong.ID.toString())
                 setResult(Activity.RESULT_OK, resultIntent)
                 finish()
             }
@@ -73,6 +74,7 @@ class SongBookActivity : AppCompatActivity() {
     companion object {
         @JvmField
         val name = ""
+        val ID = ""
     }
 
 

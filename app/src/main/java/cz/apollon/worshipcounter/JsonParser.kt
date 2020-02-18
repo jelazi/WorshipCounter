@@ -10,9 +10,9 @@ object JsonParser {
         val gson = Gson()
         val gsonPretty = GsonBuilder().setPrettyPrinting().create()
 
-        val jsonListBook: String = gson.toJson(SongBook.listBook)
+        val jsonListBook: String = gson.toJson(Book.songBook)
 
-        val jsonListBookPretty: String = gsonPretty.toJson(SongBook.listBook)
+        val jsonListBookPretty: String = gsonPretty.toJson(Book.songBook)
 
         return jsonListBookPretty
     }

@@ -1,7 +1,7 @@
 package cz.apollon.worshipcounter
 
 class Song (var name: String, var page: Int){
-    var useDates: ArrayList<DateSong> = arrayListOf()
+    var useDates: ArrayList<MyDate> = arrayListOf()
     var ID: Int = 0
 
     fun compare (anotherSong: Song):Boolean {
@@ -21,8 +21,8 @@ class Song (var name: String, var page: Int){
         return false
     }
 
-    fun getLastDate (): DateSong? {
-        var lastDate: DateSong? = null
+    fun getLastDate (): MyDate? {
+        var lastDate: MyDate? = null
         if (useDates.isEmpty()) return null
         lastDate = useDates.get(0)
         useDates.forEach {

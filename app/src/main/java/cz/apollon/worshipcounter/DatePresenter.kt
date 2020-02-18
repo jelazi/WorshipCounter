@@ -1,7 +1,5 @@
 package cz.apollon.worshipcounter
 
-import java.time.LocalDate
-import java.time.Month
 import java.util.*
 
 class DatePresenter {
@@ -14,7 +12,7 @@ class DatePresenter {
         val day = c.get(Calendar.DAY_OF_MONTH)
         val dayOfWeek = c.get(Calendar.DAY_OF_WEEK)
         var nameDay = getNameDayOfWeek(dayOfWeek)
-        var date: DateSong = DateSong(day, month, year)
+        var date: MyDate = MyDate(day, month, year)
 
         fun getCurrentDate(): String {
             var currentDate : String = "" + nameDay + " " + day + ". " + getNameMonth(month) + ". " + year

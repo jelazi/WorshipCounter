@@ -54,9 +54,9 @@
 
         <Button
             android:id="@+id/btn_add_song_school"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="add Song" />
+            android:text="+" />
 
         <View
             android:id="@+id/divider_first"
@@ -87,9 +87,9 @@
 
         <Button
             android:id="@+id/btn_add_song_sermon"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="add Song" />
+            android:text="+" />
 
         <View
             android:id="@+id/divider_second"

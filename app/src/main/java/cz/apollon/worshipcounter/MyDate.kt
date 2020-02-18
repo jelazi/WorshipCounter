@@ -3,16 +3,16 @@ package cz.apollon.worshipcounter
 
 
 
-class DateSong (var day: Int, var month: Int, var year: Int) : Comparable<DateSong>{
+class MyDate (var day: Int, var month: Int, var year: Int) : Comparable<MyDate>{
 
-    fun isSame(anotherDateSong: DateSong):Boolean {
+    fun isSame(anotherDateSong: MyDate):Boolean {
         if (this.day != anotherDateSong.day) return false
         if (this.month != anotherDateSong.month) return false
         if (this.year != anotherDateSong.year) return false
         return true
     }
 
-    fun containsSameDate(arrayDateSong: ArrayList<DateSong>): Boolean {
+    fun containsSameDate(arrayDateSong: ArrayList<MyDate>): Boolean {
         arrayDateSong.forEach {
             if (isSame(it)) return true
         }
@@ -20,7 +20,7 @@ class DateSong (var day: Int, var month: Int, var year: Int) : Comparable<DateSo
     }
 
 
-    override operator fun compareTo(other: DateSong): Int {
+    override operator fun compareTo(other: MyDate): Int {
         if (this.year > other.year) return 1
         if (this.year < other.year) return -1
         if (this.month > other.month) return 1
