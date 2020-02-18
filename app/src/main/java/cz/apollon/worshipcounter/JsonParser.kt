@@ -6,18 +6,18 @@ import com.google.gson.reflect.TypeToken
 
 object JsonParser {
 
-    fun listBookToJson ():String {
+    fun songBookToJson ():String {
         val gson = Gson()
         val gsonPretty = GsonBuilder().setPrettyPrinting().create()
 
-        val jsonListBook: String = gson.toJson(Book.songBook)
+        val jsonListBook: String = gson.toJson(Books.songBook)
 
-        val jsonListBookPretty: String = gsonPretty.toJson(Book.songBook)
+        val jsonListBookPretty: String = gsonPretty.toJson(Books.songBook)
 
         return jsonListBookPretty
     }
 
-    fun jsonToListBook (json: String):ArrayList<Song> {
+    fun jsonToSongBook (json: String):ArrayList<Song> {
         val gson = Gson()
         val itemType = object : TypeToken<ArrayList<Song>>() {}.type
         val jsonObject = gson.fromJson<ArrayList<Song>>(json, itemType)

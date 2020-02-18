@@ -6,13 +6,17 @@
     android:layout_height="match_parent"
     tools:context=".SongActivity">
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/nameSong"
+            android:id="@+id/name_song"
             android:layout_width="match_parent"
             android:layout_height="60sp"
             android:textAlignment="center"
@@ -20,23 +24,28 @@
             android:text="Name of Song" />
 
         <TextView
-            android:id="@+id/pageSong"
+            android:id="@+id/page_song"
             android:layout_width="match_parent"
             android:layout_height="60sp"
+            android:digits="0123456789"
             android:textAlignment="center"
             android:textSize="40sp"
             android:text="Page of Song" />
 
         <ListView
+            android:id="@+id/dates_song"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/btn_save_song"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Save Song" />
+
     </LinearLayout>
 
-    <Button
-        android:id="@+id/button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Save Song"
-        tools:layout_editor_absoluteX="142dp"
-        tools:layout_editor_absoluteY="126dp" />
+    </ScrollView>
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

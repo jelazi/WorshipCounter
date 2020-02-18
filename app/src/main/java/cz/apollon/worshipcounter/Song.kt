@@ -1,6 +1,7 @@
 package cz.apollon.worshipcounter
+import java.io.Serializable
 
-class Song (var name: String, var page: Int){
+class Song (var name: String, var page: Int) : Serializable {
     var useDates: ArrayList<MyDate> = arrayListOf()
     var ID: Int = 0
 
@@ -29,6 +30,14 @@ class Song (var name: String, var page: Int){
             if (it.compareTo(lastDate!!) == 1) lastDate = it
         }
         return lastDate
+    }
+
+    fun getDates(): ArrayList<String> {
+        var datesName: ArrayList<String> = arrayListOf()
+        useDates.forEach{
+            datesName.add(it.toString())
+        }
+        return datesName
     }
 
 }

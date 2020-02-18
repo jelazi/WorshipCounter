@@ -1,6 +1,6 @@
 package cz.apollon.worshipcounter
 
-object Book {
+object Books {
 
     var songBook: ArrayList<Song> = arrayListOf()
     var worshipDayBook: ArrayList<WorshipDay> = arrayListOf()
@@ -19,6 +19,17 @@ object Book {
         song.ID = ++countSongID
         songBook.add(song)
         return true
+    }
+
+    fun changeSong (song: Song) {
+        var songForChange = getSongByID(song.ID)
+
+        if (songForChange?.name?.compareTo(song.name) == 0) {
+            songForChange?.name = song.name
+        }
+        if (songForChange?.page == song.page) {
+            songForChange?.page = song.page
+        }
     }
 
     fun removeSong (song: Song) {

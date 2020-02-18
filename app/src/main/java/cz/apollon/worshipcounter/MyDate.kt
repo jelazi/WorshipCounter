@@ -1,9 +1,9 @@
 package cz.apollon.worshipcounter
 
+import java.io.Serializable
 
 
-
-class MyDate (var day: Int, var month: Int, var year: Int) : Comparable<MyDate>{
+class MyDate (var day: Int, var month: Int, var year: Int) : Comparable<MyDate>, Serializable{
 
     fun isSame(anotherDateSong: MyDate):Boolean {
         if (this.day != anotherDateSong.day) return false

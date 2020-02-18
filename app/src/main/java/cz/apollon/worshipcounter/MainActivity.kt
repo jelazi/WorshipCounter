@@ -49,8 +49,8 @@ class MainActivity : AppCompatActivity() {
         initListeners()
         resetWorshipDay()
         SongManager.createDefaultSongBook()
-        Book.sortByLastDate()
-        var list = Book.songBook
+        Books.sortByLastDate()
+        var list = Books.songBook
 
         var today = MyDate(DatePresenter.getCurrentDay(), DatePresenter. getCurrentMonth(), DatePresenter.getCurrentYear())
         dayList = WorshipDay(today)
@@ -140,6 +140,7 @@ class MainActivity : AppCompatActivity() {
 
     fun choiceSong (partDay: PartDayItem) {
         val intent = Intent(this, SongBookActivity::class.java)
+        intent.putExtra("editable",false.toString())
         choisePartDay = partDay
         startActivityForResult(intent, CHOICE_SONG)
     }
@@ -190,11 +191,14 @@ class MainActivity : AppCompatActivity() {
         secondBeforeSermon?.page?.setText("---")
         thirdBeforeSermon?.page?.setText("---")
         fourthAfterSermon?.page?.setText("---")
+
+
     }
 
 
     fun openSongBookPreview () {
         val intent = Intent(this, SongBookActivity::class.java)
+        intent.putExtra("editable",true.toString())
         startActivity(intent)
     }
 
@@ -207,7 +211,7 @@ class MainActivity : AppCompatActivity() {
             val name = data?.getStringExtra(SongBookActivity.name)
             val ID = data?.getStringExtra(SongBookActivity.ID)?.toInt()
             if (ID != null) {
-            val choiceSong: Song? = Book.getSongByID(ID)
+            val choiceSong: Song? = Books.getSongByID(ID)
             if (choiceSong != null) {
                 listDaySong.set(choisePartDay!!.id!!, choiceSong.ID)
 

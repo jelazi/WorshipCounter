@@ -40,44 +40,44 @@ object SongManager {
         var song19 = Song("Kéž se v našich domech tančí", 19)
         var song20 = Song("Můj Králi, má spáso", 20)
 
-        Book.addSong(song1)
-        Book.addSong(song2)
-        Book.addSong(song3)
-        Book.addSong(song4)
-        Book.addSong(song5)
-        Book.addSong(song6)
-        Book.addSong(song7)
-        Book.addSong(song8)
-        Book.addSong(song9)
-        Book.addSong(song10)
-        Book.addSong(song11)
-        Book.addSong(song12)
-        Book.addSong(song13)
-        Book.addSong(song14)
-        Book.addSong(song15)
-        Book.addSong(song16)
-        Book.addSong(song17)
-        Book.addSong(song18)
-        Book.addSong(song19)
-        Book.addSong(song20)
+        Books.addSong(song1)
+        Books.addSong(song2)
+        Books.addSong(song3)
+        Books.addSong(song4)
+        Books.addSong(song5)
+        Books.addSong(song6)
+        Books.addSong(song7)
+        Books.addSong(song8)
+        Books.addSong(song9)
+        Books.addSong(song10)
+        Books.addSong(song11)
+        Books.addSong(song12)
+        Books.addSong(song13)
+        Books.addSong(song14)
+        Books.addSong(song15)
+        Books.addSong(song16)
+        Books.addSong(song17)
+        Books.addSong(song18)
+        Books.addSong(song19)
+        Books.addSong(song20)
     }
 
     fun getSongbookItems (nameItems: String): Array<String> {
         var songbookNames: Array<String> = arrayOf()
         if (nameItems == "name") {
-            Book.songBook.forEach {
+            Books.songBook.forEach {
                 songbookNames += it.name
             }
         } else if (nameItems == "ID") {
-            Book.songBook.forEach {
+            Books.songBook.forEach {
                 songbookNames += it.ID.toString()
             }
         } else if (nameItems == "page") {
-            Book.songBook.forEach {
+            Books.songBook.forEach {
                 songbookNames += it.page.toString()
             }
         } else if (nameItems == "lastDate") {
-            Book.songBook.forEach {
+            Books.songBook.forEach {
                 if (it.useDates.isEmpty()) {
                     songbookNames += "---"
                 } else {
