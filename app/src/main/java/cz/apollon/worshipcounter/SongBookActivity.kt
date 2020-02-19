@@ -86,6 +86,7 @@ class SongBookActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        Books.sortByLastDate()
         songBookNames = SongManager.getSongbookItems("name")
         songBookLastDate = SongManager.getSongbookItems("lastDate")
         songBookPages = SongManager.getSongbookItems("page")
@@ -173,8 +174,25 @@ class SongBookActivity : AppCompatActivity() {
 
     fun addNewSong (name: String, page: Int) {
         var song: Song = Song(name, page)
-        Books.addSong(song)
+        val result = Books.addSong(song)
+        if (result < 0) {
+            errorDialog(result)
+        }
         onResume()
+    }
+
+    fun errorDialog (result: Int) {
+        when (result) {
+            -1 -> {
+                Toast.makeText(this@SongBookActivity, "Již uložená píseň má stejný název. Použijte jiný název", Toast.LENGTH_SHORT).show()
+            }
+            -2 -> {
+                Toast.makeText(this@SongBookActivity, "Již uložená píseň má stejnou stránku. Použijte jinou stránku", Toast.LENGTH_SHORT).show()
+            }
+            else -> {
+                Toast.makeText(this@SongBookActivity, "Nějaká jiná chyba", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     companion object {

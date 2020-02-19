@@ -95,20 +95,7 @@
                     android:id="@+id/btn_save_day"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Save this day" />
-
-
-                <Button
-                    android:id="@+id/btnSongPreview"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Song Preview" />
-
-                <Button
-                    android:id="@+id/btnSongBookPreview"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="SongBook Preview" />
+                    android:text="Uložit bohoslužbu" />
 
 
             </LinearLayout>

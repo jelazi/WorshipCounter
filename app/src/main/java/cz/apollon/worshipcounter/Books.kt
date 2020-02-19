@@ -8,17 +8,17 @@ object Books {
     private set
 
 
-    fun addSong (song: Song): Boolean {
+    fun addSong (song: Song): Int {
         if (isSameName(song)) {
-            return false
+            return -1
         }
         if (isSamePage(song)) {
-            return false
+            return -2
         }
 
         song.ID = ++countSongID
         songBook.add(song)
-        return true
+        return 1
     }
 
     fun changeSong (song: Song) {
@@ -31,6 +31,7 @@ object Books {
             songBook[index!!].page = song.page
         }
     }
+
 
     fun removeSong (song: Song) {
         songBook.forEach {

@@ -27,13 +27,21 @@
         android:icon="@drawable/save_icon"
         android:title="Uložit"/>
 
-
-
-
-        <item
+    <item
             android:id="@+id/action_settings"
             android:orderInCategory="100"
-            android:title="action Settings"/>
+            android:title="Nastavení"/>
 
-    </menu>
+    <item
+        android:id="@+id/load_test_data"
+        android:orderInCategory="100"
+        android:title="Načíst testovací data"/>
+
+    <item
+        android:id="@+id/factory_reset"
+        android:orderInCategory="100"
+        android:title="Vymazat všechna data"/>
+
+
+</menu>
 

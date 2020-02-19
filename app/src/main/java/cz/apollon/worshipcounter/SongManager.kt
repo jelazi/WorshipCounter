@@ -60,7 +60,37 @@ object SongManager {
         Books.addSong(song18)
         Books.addSong(song19)
         Books.addSong(song20)
+
+        Books.sortByLastDate()
     }
+
+    fun resetData () {
+        Books.songBook = arrayListOf()
+        Books.worshipDayBook = arrayListOf()
+    }
+
+    fun saveDaysData (dayList: WorshipDay): Int {
+        if (dayList.songs.isEmpty()) return -4
+        var result = 1
+        var wrongIndex = 0
+        dayList.songs.forEach {
+            if (Books.getSongByID(it.ID)?.addDate(dayList.date)!! == -3) {
+                wrongIndex++
+            }
+        }
+        if (wrongIndex > 0) result = -3
+        if (wrongIndex == dayList.songs.size) result = -2
+        return result
+    }
+
+
+    fun controlData (): Int {
+        if (Books.songBook.isEmpty()) {
+            return -1
+        }
+        return 0
+    }
+
 
     fun getSongbookItems (nameItems: String): Array<String> {
         var songbookNames: Array<String> = arrayOf()

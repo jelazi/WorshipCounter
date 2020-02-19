@@ -12,7 +12,8 @@ import android.widget.*
 class WorshipActivity : AppCompatActivity() {
 
     var lblDate: TextView? = null
-    var listDaySong: Array <Int> = arrayOf(0,0,0,0,0,0,0,0,0)
+    var listDaySong: Array <Int> = arrayOf(0,0,0,0,0,0,0,0)
+    var listPartDayItem: ArrayList <PartDayItem> = arrayListOf()
 
 
     var firstBeforeSchool: PartDayItem? = null
@@ -26,14 +27,14 @@ class WorshipActivity : AppCompatActivity() {
 
     var layoutDayWorship: LinearLayout? = null
 
+    var saveBtn: Button? = null
+
 
     private val CHOICE_SONG = 1
 
     var dayList: WorshipDay? = null
 
 
-    var btnSongPreview: Button? = null
-    var btnSongBookPreview: Button? = null
 
     var choisePartDay: PartDayItem? = null
 
@@ -47,56 +48,55 @@ class WorshipActivity : AppCompatActivity() {
         initItems()
         initListeners()
         resetWorshipDay()
-        SongManager.createDefaultSongBook()
-        Books.sortByLastDate()
-        var list = Books.songBook
 
-        var today = MyDate(DatePresenter.getCurrentDay(), DatePresenter. getCurrentMonth(), DatePresenter.getCurrentYear())
+        var today = MyDate(DatePresenter.getCurrentDay(), DatePresenter.getCurrentMonth() + 1, DatePresenter.getCurrentYear())
         dayList = WorshipDay(today)
 
-        //  datePicker()
-        //  openSongBookPreview()
-
-
-
-        //     var jsonListBook = JsonParser.listBookToJson()
-        //    var listBook = JsonParser.jsonToListBook(jsonListBook)
-
-        //  listBook.remove(listBook[0])
-        //  listBook[1].name = "kd fjas j"
-        //  SongBook.listBook.remove(SongBook.listBook[3])
-        //  SongBook.listBook[4].name = "dfaskjf k"
-
-        //    var isSame = SongManager.compareListBooks(SongBook.listBook, listBook)
-        //    var changingSongs = SongManager.getChangingSongs(SongBook.listBook, listBook, true)
-        var hello = ""
+        var control: Int = SongManager.controlData()
+        errorDialog(control)
     }
 
     fun initItems() {
         lblDate = findViewById(R.id.label_date)
 
+        saveBtn = findViewById(R.id.btn_save_day)
+
         layoutDayWorship = findViewById(R.id.layout_day_woship)
 
         firstBeforeSchool = findViewById(R.id.first_before_school)
         firstBeforeSchool?.id = 1
+        listPartDayItem.add(firstBeforeSchool!!)
         secondBeforeSchool= findViewById(R.id.second_before_school)
         secondBeforeSchool?.id = 2
+        listPartDayItem.add(secondBeforeSchool!!)
+
         thirdBeforeSchool= findViewById(R.id.third_before_school)
         thirdBeforeSchool?.id = 3
+        listPartDayItem.add(thirdBeforeSchool!!)
+
         fourthBeforeSchool= findViewById(R.id.fourth_after_school)
         fourthBeforeSchool?.id = 4
+        listPartDayItem.add(fourthBeforeSchool!!)
+
         firstBeforeSermon= findViewById(R.id.first_before_sermon)
         firstBeforeSermon?.id = 5
+        listPartDayItem.add(firstBeforeSermon!!)
+
         secondBeforeSermon= findViewById(R.id.second_before_sermon)
         secondBeforeSermon?.id = 6
+        listPartDayItem.add(secondBeforeSermon!!)
+
         thirdBeforeSermon= findViewById(R.id.third_before_sermon)
         thirdBeforeSermon?.id = 7
+        listPartDayItem.add(thirdBeforeSermon!!)
+
         fourthAfterSermon= findViewById(R.id.fourth_after_sermon)
         fourthAfterSermon?.id = 8
+        listPartDayItem.add(fourthAfterSermon!!)
 
 
-        btnSongPreview = findViewById(R.id.btnSongPreview)
-        btnSongBookPreview = findViewById(R.id.btnSongBookPreview)
+
+
         lblDate?.setText(DatePresenter.getCurrentDate())
     }
 
@@ -104,12 +104,11 @@ class WorshipActivity : AppCompatActivity() {
         val lblDateListener = lblDate?.setOnClickListener {
             datePicker()
         }
-        val btnSongPreviewListener = btnSongPreview?.setOnClickListener {
-            openSongPreview()
+
+        saveBtn?.setOnClickListener {
+            saveDay()
         }
-        val btnSongBookPreviewListener = btnSongBookPreview?.setOnClickListener {
-            openSongBookPreview()
-        }
+
         firstBeforeSchool?.setOnClickListener {
             choiceSong(firstBeforeSchool!!)
         }
@@ -163,6 +162,16 @@ class WorshipActivity : AppCompatActivity() {
                 saveDay()
                 return true
             }
+
+            R.id.load_test_data -> {
+                loadTestData()
+                return true
+            }
+
+            R.id.factory_reset -> {
+                resetDataDialog()
+                return true
+            }
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -207,6 +216,8 @@ class WorshipActivity : AppCompatActivity() {
         newPart.setOnClickListener {
             choiceSong(newPart)
         }
+        listPartDayItem.add(newPart!!)
+
         layoutDayWorship?.addView(newPart)
     }
 
@@ -221,7 +232,7 @@ class WorshipActivity : AppCompatActivity() {
     fun datePicker () {
         val dpd = DatePickerDialog(this, DatePickerDialog.OnDateSetListener { view, selectedYear, selectedMonth, selectedDay ->
             lblDate?.setText(DatePresenter.getSelectedDate(selectedYear, selectedMonth, selectedDay))
-            var myDate = MyDate(selectedDay, selectedMonth, selectedYear)
+            var myDate = MyDate(selectedDay, selectedMonth + 1, selectedYear)
             var daylistDate = dayList?.date
             if (dayList != null && daylistDate?.compareTo(myDate) != 0) {
                 dayList = WorshipDay(myDate)
@@ -285,7 +296,7 @@ class WorshipActivity : AppCompatActivity() {
             if (ID != null) {
                 val choiceSong: Song? = Books.getSongByID(ID)
                 if (choiceSong != null) {
-                    listDaySong[choisePartDay!!.id!!] = choiceSong.ID
+                    listDaySong[choisePartDay!!.id!! - 1] = choiceSong.ID
 
                     Toast.makeText(this@WorshipActivity, name, Toast.LENGTH_SHORT).show()
 
@@ -298,7 +309,85 @@ class WorshipActivity : AppCompatActivity() {
     }
 
     fun saveDay () {
+        var index = 0
+        listDaySong.forEach {
 
+            if (it != 0) {
+                dayList?.addSong(index, Books.getSongByID(it)!!, listPartDayItem[index].description.toString())
+            }
+            index ++
+        }
+
+       var result =  SongManager.saveDaysData(dayList!!)
+        errorDialog(result)
+    }
+
+    fun resetDataDialog () {
+        val builder = AlertDialog.Builder(this@WorshipActivity)
+        builder.setTitle("Vymazání všech dat")
+        builder.setMessage("Opravdu chcete vymazat všechna data?")
+
+
+        builder.setPositiveButton("ANO"){dialog, which ->
+            SongManager.resetData()
+            resetWorshipDay()
+        }
+
+        builder.setNeutralButton("Ne"){_,_ ->
+        }
+
+        val dialog: AlertDialog = builder.create()
+        dialog.show()
+    }
+
+    fun loadTestData () {
+        SongManager.createDefaultSongBook()
+    }
+
+    fun errorDialog (result: Int) {
+        when (result) {
+            -1 -> {
+                val builder = AlertDialog.Builder(this@WorshipActivity)
+                builder.setTitle("Prázdná data")
+                builder.setMessage("V aplikaci nejsou uložena žádná data. Chcete nahrát testovací písně?")
+
+
+                builder.setPositiveButton("ANO"){dialog, which ->
+                    SongManager.createDefaultSongBook()
+                }
+
+                builder.setNeutralButton("Ne"){_,_ ->
+                }
+
+                val dialog: AlertDialog = builder.create()
+                dialog.show()
+
+            }
+
+            -2 -> {
+                Toast.makeText(this@WorshipActivity, "Ve všech vybraných písních se již toto datum nachází", Toast.LENGTH_SHORT).show()
+
+            }
+
+            -3 -> {
+                Toast.makeText(this@WorshipActivity, "V některých vybraných písních se již toto datum nachází. Ostatní byly uloženy.", Toast.LENGTH_SHORT).show()
+
+            }
+            -4 -> {
+                Toast.makeText(this@WorshipActivity, "Seznam je prázdný", Toast.LENGTH_SHORT).show()
+
+            }
+            0 -> {
+
+            }
+            1-> {
+                Toast.makeText(this@WorshipActivity, "Data jsou uložena", Toast.LENGTH_SHORT).show()
+            }
+
+            else -> {
+                Toast.makeText(this@WorshipActivity, "Nějaká jiná chyba", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 }
 

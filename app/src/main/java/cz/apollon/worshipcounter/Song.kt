@@ -15,6 +15,12 @@ class Song (var name: String, var page: Int) : Serializable {
         return true
     }
 
+    fun addDate(date: MyDate): Int {
+        if (date.containsSameDate(useDates)) return -3
+        useDates.add(date)
+        return 0
+    }
+
     fun existsInListBook (listBook: ArrayList<Song>): Boolean {
         listBook.forEach {
             if (this.compare(it)) return true

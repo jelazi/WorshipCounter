@@ -2,9 +2,12 @@ package cz.apollon.worshipcounter
 
 class WorshipDay (date: MyDate){
     var date = date
-    private var orders: ArrayList<Int> = arrayListOf()
-    private var songs: ArrayList<Song> = arrayListOf()
-    private var namesPart: ArrayList<String> = arrayListOf()
+    var orders: ArrayList<Int> = arrayListOf()
+    private set
+    var songs: ArrayList<Song> = arrayListOf()
+    private set
+    var namesPart: ArrayList<String> = arrayListOf()
+    private set
 
     fun addSong (order: Int, song: Song, namePart: String) {
         orders.add(order)
