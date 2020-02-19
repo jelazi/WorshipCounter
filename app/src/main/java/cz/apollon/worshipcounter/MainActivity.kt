@@ -13,7 +13,7 @@ import cz.apollon.worshipcounter.R.id.first_before_school
 class MainActivity : AppCompatActivity() {
 
     var lblDate: TextView? = null
-    var listDaySong: Array <Int> = arrayOf(0,0,0,0,0,0,0,0)
+    var listDaySong: Array <Int> = arrayOf(0,0,0,0,0,0,0,0,0)
 
 
     var firstBeforeSchool: PartDayItem? = null
@@ -213,7 +213,7 @@ class MainActivity : AppCompatActivity() {
             if (ID != null) {
             val choiceSong: Song? = Books.getSongByID(ID)
             if (choiceSong != null) {
-                listDaySong.set(choisePartDay!!.id!!, choiceSong.ID)
+                listDaySong[choisePartDay!!.id!!] = choiceSong.ID
 
                 Toast.makeText(this@MainActivity, name, Toast.LENGTH_SHORT).show()
 

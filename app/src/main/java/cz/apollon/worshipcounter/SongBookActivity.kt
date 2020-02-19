@@ -18,6 +18,11 @@ class SongBookActivity : AppCompatActivity() {
 
   var editable: String? = null
     var lv: ListView? = null
+    var songBookNames: Array<String> = arrayOf()
+    var songBookLastDate: Array<String> = arrayOf()
+    var songBookPages: Array<String> = arrayOf()
+    var songListadapter: SongListAdapter? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,13 +37,13 @@ class SongBookActivity : AppCompatActivity() {
         editable = intent.getStringExtra("editable")
 
 
-        var songBookNames = SongManager.getSongbookItems("name")
-        var songBookLastDate = SongManager.getSongbookItems("lastDate")
-        var songBookPages = SongManager.getSongbookItems("page")
+        songBookNames = SongManager.getSongbookItems("name")
+        songBookLastDate = SongManager.getSongbookItems("lastDate")
+        songBookPages = SongManager.getSongbookItems("page")
 
 
         //ADAPTER
-        val songListadapter = SongListAdapter(this, songBookPages, songBookNames, songBookLastDate)
+       songListadapter = SongListAdapter(this, songBookPages, songBookNames, songBookLastDate)
         lv?.setAdapter(songListadapter)
 
         //SEARCHBAR TEXT CHANGE LISTENER
@@ -49,7 +54,7 @@ class SongBookActivity : AppCompatActivity() {
 
             override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
                 //SEARCH FILTER
-                songListadapter.getFilter().filter(charSequence)
+                songListadapter!!.getFilter().filter(charSequence)
             }
 
             override fun afterTextChanged(editable: Editable) {
@@ -79,12 +84,12 @@ class SongBookActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        var songBookNames = SongManager.getSongbookItems("name")
-        var songBookLastDate = SongManager.getSongbookItems("lastDate")
-        var songBookPages = SongManager.getSongbookItems("page")
+        songBookNames = SongManager.getSongbookItems("name")
+        songBookLastDate = SongManager.getSongbookItems("lastDate")
+        songBookPages = SongManager.getSongbookItems("page")
         val songListadapter = SongListAdapter(this, songBookPages, songBookNames, songBookLastDate)
-        lv?.deferNotifyDataSetChanged()
-        lv?.invalidateViews();
+        lv?.setAdapter(songListadapter)
+
     }
 
     fun editSong (song: Song)  {

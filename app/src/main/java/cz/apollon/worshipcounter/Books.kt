@@ -22,13 +22,13 @@ object Books {
     }
 
     fun changeSong (song: Song) {
-        var songForChange = getSongByID(song.ID)
+        var index = getSongIndexByID(song.ID)
 
-        if (songForChange?.name?.compareTo(song.name) == 0) {
-            songForChange?.name = song.name
+        if (songBook[index!!].name.compareTo(song.name) != 0) {
+            songBook[index!!].name = song.name
         }
-        if (songForChange?.page == song.page) {
-            songForChange?.page = song.page
+        if (songBook[index!!].page != song.page) {
+            songBook[index!!].page = song.page
         }
     }
 
@@ -70,6 +70,15 @@ object Books {
     fun getSongByID (id: Int): Song? {
         songBook.forEach {
             if (it.ID == id) return it
+        }
+        return null
+    }
+
+    fun getSongIndexByID (id: Int): Int? {
+        for (i in songBook.indices) {
+            if (songBook[i].ID == id) {
+                return i
+            }
         }
         return null
     }

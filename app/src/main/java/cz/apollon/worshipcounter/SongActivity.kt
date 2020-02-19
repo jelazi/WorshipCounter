@@ -126,12 +126,21 @@ class SongActivity : AppCompatActivity() {
 
         builder.setNeutralButton("Zrušit"){_,_ ->
         }
-
         val dialog: AlertDialog = builder.create()
         dialog.show()
-
     }
+
     fun saveSong () {
+        if (lblNameSong?.text!!.isEmpty()) {
+            Toast.makeText(this@SongActivity, "Pole jméno nesmí být prázdné.", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        if (lblPageSong?.text!!.isEmpty()) {
+            Toast.makeText(this@SongActivity, "Pole stránka nesmí být prázdné.", Toast.LENGTH_SHORT).show()
+            return
+        }
+
         if (isChangeName) {
             song?.name = lblNameSong?.text.toString()
         }
