@@ -175,19 +175,23 @@ class SongBookActivity : AppCompatActivity() {
     fun addNewSong (name: String, page: Int) {
         var song: Song = Song(name, page)
         val result = Books.addSong(song)
-        if (result < 0) {
-            errorDialog(result)
-        }
+        showMyDialog(result)
         onResume()
     }
 
-    fun errorDialog (result: Int) {
+    fun showMyDialog (result: Int) {
         when (result) {
             -1 -> {
                 Toast.makeText(this@SongBookActivity, "Již uložená píseň má stejný název. Použijte jiný název", Toast.LENGTH_SHORT).show()
             }
             -2 -> {
                 Toast.makeText(this@SongBookActivity, "Již uložená píseň má stejnou stránku. Použijte jinou stránku", Toast.LENGTH_SHORT).show()
+            }
+            0 -> {
+
+            }
+            1 -> {
+                Toast.makeText(this@SongBookActivity, "Píseň je vytvořena", Toast.LENGTH_SHORT).show()
             }
             else -> {
                 Toast.makeText(this@SongBookActivity, "Nějaká jiná chyba", Toast.LENGTH_SHORT).show()

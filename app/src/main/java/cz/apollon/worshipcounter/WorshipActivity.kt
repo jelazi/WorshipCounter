@@ -53,7 +53,7 @@ class WorshipActivity : AppCompatActivity() {
         dayList = WorshipDay(today)
 
         var control: Int = SongManager.controlData()
-        errorDialog(control)
+        showMyDialog(control)
     }
 
     fun initItems() {
@@ -106,7 +106,7 @@ class WorshipActivity : AppCompatActivity() {
         }
 
         saveBtn?.setOnClickListener {
-            saveDay()
+            dialogSaveDay()
         }
 
         firstBeforeSchool?.setOnClickListener {
@@ -159,7 +159,7 @@ class WorshipActivity : AppCompatActivity() {
             }
 
             R.id.save_day -> {
-                saveDay()
+                dialogSaveDay()
                 return true
             }
 
@@ -191,9 +191,10 @@ class WorshipActivity : AppCompatActivity() {
 
         builder.setPositiveButton("ANO"){dialog, which ->
             if (input.text.toString().isEmpty()) {
-                Toast.makeText(this@WorshipActivity, "Popis nesmí zůstat prázdný...", Toast.LENGTH_SHORT).show()
+                showMyDialog(-5)
             } else {
                 addNewPart(input.text.toString())
+                showMyDialog(2)
             }
         }
 
@@ -308,6 +309,23 @@ class WorshipActivity : AppCompatActivity() {
         }
     }
 
+    fun dialogSaveDay () {
+        val builder = AlertDialog.Builder(this@WorshipActivity)
+        builder.setTitle("Uložení písní")
+        builder.setMessage("Je opravdu tento den správně napsán? Chcete data uložit?")
+
+
+        builder.setPositiveButton("ANO"){dialog, which ->
+            saveDay()
+        }
+
+        builder.setNeutralButton("Ne"){_,_ ->
+        }
+
+        val dialog: AlertDialog = builder.create()
+        dialog.show()
+    }
+
     fun saveDay () {
         var index = 0
         listDaySong.forEach {
@@ -319,7 +337,7 @@ class WorshipActivity : AppCompatActivity() {
         }
 
        var result =  SongManager.saveDaysData(dayList!!)
-        errorDialog(result)
+        showMyDialog(result)
     }
 
     fun resetDataDialog () {
@@ -342,9 +360,10 @@ class WorshipActivity : AppCompatActivity() {
 
     fun loadTestData () {
         SongManager.createDefaultSongBook()
+        Toast.makeText(this@WorshipActivity, "Testovací data jsou načtena.", Toast.LENGTH_SHORT).show()
     }
 
-    fun errorDialog (result: Int) {
+    fun showMyDialog (result: Int) {
         when (result) {
             -1 -> {
                 val builder = AlertDialog.Builder(this@WorshipActivity)
@@ -354,6 +373,7 @@ class WorshipActivity : AppCompatActivity() {
 
                 builder.setPositiveButton("ANO"){dialog, which ->
                     SongManager.createDefaultSongBook()
+                    Toast.makeText(this@WorshipActivity, "Testovací data jsou načtena.", Toast.LENGTH_SHORT).show()
                 }
 
                 builder.setNeutralButton("Ne"){_,_ ->
@@ -377,11 +397,19 @@ class WorshipActivity : AppCompatActivity() {
                 Toast.makeText(this@WorshipActivity, "Seznam je prázdný", Toast.LENGTH_SHORT).show()
 
             }
+            -5 -> {
+                Toast.makeText(this@WorshipActivity, "Popis nesmí zůstat prázdný...", Toast.LENGTH_SHORT).show()
+
+            }
+
             0 -> {
 
             }
             1-> {
                 Toast.makeText(this@WorshipActivity, "Data jsou uložena", Toast.LENGTH_SHORT).show()
+            }
+            2-> {
+                Toast.makeText(this@WorshipActivity, "Nová položka je vytvořena", Toast.LENGTH_SHORT).show()
             }
 
             else -> {
