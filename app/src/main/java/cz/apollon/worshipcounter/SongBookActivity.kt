@@ -1,17 +1,19 @@
 package cz.apollon.worshipcounter
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
+import android.text.InputType
 import android.text.TextWatcher
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
-import android.widget.AdapterView
-import android.widget.ListView
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.mancj.materialsearchbar.MaterialSearchBar
 import java.io.Serializable
-
 
 
 class SongBookActivity : AppCompatActivity() {
@@ -92,10 +94,87 @@ class SongBookActivity : AppCompatActivity() {
 
     }
 
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.preview_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.action_settings -> {
+                Toast.makeText(applicationContext, "click on setting", Toast.LENGTH_LONG).show()
+                true
+            }
+
+            R.id.new_song -> {
+                dialogAddNewSong()
+                return true
+            }
+
+
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
     fun editSong (song: Song)  {
         val intent = Intent(this, SongActivity::class.java)
         intent.putExtra("song", song as Serializable)
         startActivity(intent)
+    }
+
+    fun dialogAddNewSong () {
+        val builder = AlertDialog.Builder(this@SongBookActivity)
+        builder.setTitle("Přidání písně")
+        val editNameSong = EditText(this@SongBookActivity)
+        val editPageSong = EditText(this@SongBookActivity)
+        val mainLayout = LinearLayout(this@SongBookActivity)
+        val nameLayout = LinearLayout(this@SongBookActivity)
+        val pageLayout = LinearLayout(this@SongBookActivity)
+        val descNameSong = TextView (this@SongBookActivity)
+        val descPageSong = TextView (this@SongBookActivity)
+
+        descNameSong.text = "Jméno"
+        descPageSong.text = "stránka"
+
+        mainLayout.orientation = LinearLayout.VERTICAL
+        pageLayout.orientation = LinearLayout.HORIZONTAL
+        nameLayout.orientation = LinearLayout.HORIZONTAL
+        editNameSong.setText("Nová píseň")
+        builder.setView(editNameSong)
+        editPageSong.setText("0")
+        editPageSong.inputType = InputType.TYPE_CLASS_NUMBER
+
+        nameLayout.addView(descNameSong)
+        nameLayout.addView(editNameSong)
+        pageLayout.addView(descPageSong)
+        pageLayout.addView(editPageSong)
+
+        mainLayout.addView(nameLayout)
+        mainLayout.addView(pageLayout)
+        builder.setView(mainLayout)
+
+        builder.setPositiveButton("Uložit"){dialog, which ->
+            if (editNameSong.text.toString().isEmpty()) {
+                Toast.makeText(this@SongBookActivity, "Jméno nesmí zůstat prázdné...", Toast.LENGTH_SHORT).show()
+            } else if (editNameSong.text.toString().isEmpty()) {
+                Toast.makeText(this@SongBookActivity, "Stránka nesmí zůstat prázdná...", Toast.LENGTH_SHORT).show()
+            } else {
+                addNewSong(editNameSong.text.toString(), editPageSong.text.toString().toInt())
+            }
+        }
+
+        builder.setNeutralButton("Zrušit"){_,_ ->
+        }
+
+        val dialog: AlertDialog = builder.create()
+        dialog.show()
+    }
+
+    fun addNewSong (name: String, page: Int) {
+        var song: Song = Song(name, page)
+        Books.addSong(song)
+        onResume()
     }
 
     companion object {

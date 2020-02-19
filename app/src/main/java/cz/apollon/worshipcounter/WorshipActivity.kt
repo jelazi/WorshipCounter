@@ -1,12 +1,13 @@
 package cz.apollon.worshipcounter
 
+import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Button
-import android.widget.TextView
-import android.widget.Toast
+import android.view.Menu
+import android.view.MenuItem
+import android.widget.*
 
 class WorshipActivity : AppCompatActivity() {
 
@@ -23,6 +24,8 @@ class WorshipActivity : AppCompatActivity() {
     var thirdBeforeSermon: PartDayItem? = null
     var fourthAfterSermon: PartDayItem? = null
 
+    var layoutDayWorship: LinearLayout? = null
+
 
     private val CHOICE_SONG = 1
 
@@ -31,8 +34,6 @@ class WorshipActivity : AppCompatActivity() {
 
     var btnSongPreview: Button? = null
     var btnSongBookPreview: Button? = null
-    var btnAddSongSchool: Button? = null
-    var btnAddSongSermon: Button? = null
 
     var choisePartDay: PartDayItem? = null
 
@@ -74,6 +75,8 @@ class WorshipActivity : AppCompatActivity() {
     fun initItems() {
         lblDate = findViewById(R.id.label_date)
 
+        layoutDayWorship = findViewById(R.id.layout_day_woship)
+
         firstBeforeSchool = findViewById(R.id.first_before_school)
         firstBeforeSchool?.id = 1
         secondBeforeSchool= findViewById(R.id.second_before_school)
@@ -91,8 +94,6 @@ class WorshipActivity : AppCompatActivity() {
         fourthAfterSermon= findViewById(R.id.fourth_after_sermon)
         fourthAfterSermon?.id = 8
 
-        btnAddSongSchool = findViewById(R.id.btn_add_song_school)
-        btnAddSongSermon = findViewById(R.id.btn_add_song_sermon)
 
         btnSongPreview = findViewById(R.id.btnSongPreview)
         btnSongBookPreview = findViewById(R.id.btnSongBookPreview)
@@ -134,6 +135,79 @@ class WorshipActivity : AppCompatActivity() {
             choiceSong(fourthAfterSermon!!)
         }
 
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.worship_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.action_settings -> {
+                Toast.makeText(applicationContext, "click on setting", Toast.LENGTH_LONG).show()
+                true
+            }
+
+            R.id.add_part_day -> {
+                addNewPartDialog()
+                return true
+            }
+
+            R.id.preview_song -> {
+                openSongBookPreview()
+                return true
+            }
+
+            R.id.save_day -> {
+                saveDay()
+                return true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    fun addNewPartDialog () {
+        val builder = AlertDialog.Builder(this@WorshipActivity)
+        builder.setTitle("Přidání písně")
+        builder.setMessage("Napište popis, kdy píseň byla hraná")
+        val input = EditText(this@WorshipActivity)
+        val lp = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.MATCH_PARENT
+        )
+        input.layoutParams = lp
+        input.setText("Nový popis")
+        builder.setView(input)
+
+        builder.setPositiveButton("ANO"){dialog, which ->
+            if (input.text.toString().isEmpty()) {
+                Toast.makeText(this@WorshipActivity, "Popis nesmí zůstat prázdný...", Toast.LENGTH_SHORT).show()
+            } else {
+                addNewPart(input.text.toString())
+            }
+        }
+
+        builder.setNeutralButton("Zrušit"){_,_ ->
+        }
+
+        val dialog: AlertDialog = builder.create()
+        dialog.show()
+    }
+
+    fun addNewPart (desc: String) {
+        var newListDaySong = Array<Int> (listDaySong.size + 1) {i -> 0}
+        for (i in listDaySong.indices) {
+            newListDaySong[i] = listDaySong[i]
+        }
+        listDaySong = newListDaySong
+        var newPart: PartDayItem = PartDayItem(this@WorshipActivity)
+        newPart.description?.text = desc
+        newPart.id = listDaySong.size - 1
+        newPart.setOnClickListener {
+            choiceSong(newPart)
+        }
+        layoutDayWorship?.addView(newPart)
     }
 
     fun choiceSong (partDay: PartDayItem) {
@@ -221,6 +295,10 @@ class WorshipActivity : AppCompatActivity() {
             }
             choisePartDay = null
         }
+    }
+
+    fun saveDay () {
+
     }
 }
 

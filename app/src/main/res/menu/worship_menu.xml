@@ -1,4 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-</menu>
+
+    <menu xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        tools:context=".WorshipActivity">
+
+    <item
+        android:id="@+id/preview_song"
+        android:orderInCategory="100"
+        app:showAsAction="always"
+        android:icon="@drawable/preview_icon"
+        android:title=""/>
+
+    <item
+        android:id="@+id/add_part_day"
+        android:orderInCategory="100"
+        app:showAsAction="always"
+        android:icon="@drawable/add_icon"
+        android:title=""/>
+
+    <item
+        android:id="@+id/save_day"
+        android:orderInCategory="100"
+        app:showAsAction="always"
+        android:icon="@drawable/save_icon"
+        android:title="Uložit"/>
+
+
+
+
+        <item
+            android:id="@+id/action_settings"
+            android:orderInCategory="100"
+            android:title="action Settings"/>
+
+    </menu>
+

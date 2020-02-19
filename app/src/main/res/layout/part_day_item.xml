@@ -18,14 +18,14 @@
         android:gravity="center"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:text="SŠ 1" />
+        android:text="" />
 
     <TextView
         android:id="@+id/song_name_part"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="5"
-        android:text="Extra large name song for worship singing and praising out God is here"
+        android:text="---"
         android:textColor="@color/colorBlack"
         android:gravity="center"
         android:textSize="15sp" />
@@ -43,6 +43,6 @@
         android:textColor="@color/colorBlack"
         android:gravity="center"
         android:textSize="15sp"
-        android:text="Page Song" />
+        android:text="---" />
 
 </LinearLayout>
