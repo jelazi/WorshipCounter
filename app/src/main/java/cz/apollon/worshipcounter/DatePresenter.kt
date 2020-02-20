@@ -12,10 +12,9 @@ class DatePresenter {
         val day = c.get(Calendar.DAY_OF_MONTH)
         val dayOfWeek = c.get(Calendar.DAY_OF_WEEK)
         var nameDay = getNameDayOfWeek(dayOfWeek)
-        var date: MyDate = MyDate(day, month, year)
 
         fun getCurrentDate(): String {
-            var currentDate : String = "" + nameDay + " " + day + ". " + getNameMonth(month) + ". " + year
+            val currentDate : String = "" + nameDay + " " + day + ". " + getNameMonth(month) + ". " + year
             return currentDate
         }
 

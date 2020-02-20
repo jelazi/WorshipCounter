@@ -172,7 +172,7 @@ class SongBookActivity : AppCompatActivity() {
     }
 
     fun addNewSong (name: String, page: Int) {
-        var song: Song = Song(name, page)
+        val song = Song(name, page)
         val typeDialog = Books.addSong(song)
         showMyDialog(typeDialog)
         onResume()

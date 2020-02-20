@@ -23,7 +23,7 @@ class SongActivity : AppCompatActivity() {
 
         song = intent.extras.get("song") as Song
 
-        initItems()
+        this.initItems()
     }
 
     fun initItems () {
@@ -43,15 +43,15 @@ class SongActivity : AppCompatActivity() {
 
         // get listview height
         var totalHeight = 0
-        var adapterCount = adapter.getCount()
+        val adapterCount = adapter.getCount()
         for (size in 0 until adapterCount) {
-            var listItem: View = adapter.getView(size, null, dates_song)
+            val listItem: View = adapter.getView(size, null, dates_song)
             listItem.measure(0, 0)
             totalHeight += listItem.getMeasuredHeight()
         }
         // Change Height of ListView
-        var params = dates_song.getLayoutParams()
-        params?.height = (totalHeight + (dates_song.getDividerHeight()!! * (adapterCount)))
+        val params = dates_song.getLayoutParams()
+        params.height = (totalHeight + (dates_song.getDividerHeight() * (adapterCount)))
         dates_song.setLayoutParams(params)
 
         }

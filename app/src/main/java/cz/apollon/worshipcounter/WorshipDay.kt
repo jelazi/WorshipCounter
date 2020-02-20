@@ -9,6 +9,7 @@ class WorshipDay (date: MyDate){
     var namesPart: ArrayList<String> = arrayListOf()
     private set
 
+
     fun addSong (order: Int, song: Song, namePart: String) {
         orders.add(order)
         songs.add(song)
