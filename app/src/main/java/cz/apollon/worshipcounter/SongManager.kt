@@ -1,6 +1,12 @@
 package cz.apollon.worshipcounter
 
+import android.app.Activity
+
 object SongManager {
+
+
+    private var PRIVATE_MODE = 0
+    private val PREF_NAME = "songbook_pref"
 
 
     fun createDefaultSongBook () {
@@ -69,26 +75,26 @@ object SongManager {
         Books.worshipDayBook = arrayListOf()
     }
 
-    fun saveDaysData (dayList: WorshipDay): Int {
-        if (dayList.songs.isEmpty()) return -4
-        var result = 1
+    fun saveDaysData (dayList: WorshipDay): TypeDialog {
+        if (dayList.songs.isEmpty()) return TypeDialog.LIST_EMPTY
+        var result = TypeDialog.DATA_SAVED
         var wrongIndex = 0
         dayList.songs.forEach {
-            if (Books.getSongByID(it.ID)?.addDate(dayList.date)!! == -3) {
+            if (Books.getSongByID(it.id)?.addDate(dayList.date)!! == TypeDialog.DATE_USED) {
                 wrongIndex++
             }
         }
-        if (wrongIndex > 0) result = -3
-        if (wrongIndex == dayList.songs.size) result = -2
+        if (wrongIndex > 0) result = TypeDialog.DATE_USED
+        if (wrongIndex == dayList.songs.size) result = TypeDialog.ALL_DATE_USED
         return result
     }
 
 
-    fun controlData (): Int {
+    fun controlData (): TypeDialog {
         if (Books.songBook.isEmpty()) {
-            return -1
+            return TypeDialog.EMPTY_DATA
         }
-        return 0
+        return TypeDialog.NO_DIALOG
     }
 
 
@@ -100,7 +106,7 @@ object SongManager {
             }
         } else if (nameItems == "ID") {
             Books.songBook.forEach {
-                songbookNames += it.ID.toString()
+                songbookNames += it.id.toString()
             }
         } else if (nameItems == "page") {
             Books.songBook.forEach {
@@ -126,7 +132,7 @@ object SongManager {
             var firstSong = it
             isID = false
             secondBook.forEach {
-                if (firstSong.ID == it.ID) {
+                if (firstSong.id == it.id) {
                     isID = true
                     if (!it.compare(firstSong)) return false
                 }
@@ -144,7 +150,7 @@ object SongManager {
             var firstSong = it
             isID = false
             secondBook.forEach {
-                if (firstSong.ID == it.ID) {
+                if (firstSong.id == it.id) {
                     isID = true
                     if (!it.compare(firstSong) && !it.existsInListBook(changingSongs)) changingSongs.add(firstSong)
                 }
@@ -156,6 +162,21 @@ object SongManager {
 
         }
         return changingSongs
+    }
+
+    fun getSongBookFromPreferences (activity: Activity): ArrayList<Song> {
+       var sharedPref = activity.getSharedPreferences(PREF_NAME, PRIVATE_MODE)
+        var songBookString: String = sharedPref.getString(PREF_NAME, "")
+        return JsonParser.jsonToSongBook(songBookString)
+    }
+
+    fun setSongBookToPreferences (activity: Activity): Boolean {
+        val songBookString: String = JsonParser.songBookToJson()
+        var sharedPref = activity.getSharedPreferences(PREF_NAME, PRIVATE_MODE)
+        val editor = sharedPref.edit()
+        editor.putString(PREF_NAME, songBookString)
+        editor.apply()
+        return true
     }
 
 }

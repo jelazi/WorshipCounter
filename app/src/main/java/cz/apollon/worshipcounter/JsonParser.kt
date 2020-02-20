@@ -7,13 +7,8 @@ import com.google.gson.reflect.TypeToken
 object JsonParser {
 
     fun songBookToJson ():String {
-        val gson = Gson()
         val gsonPretty = GsonBuilder().setPrettyPrinting().create()
-
-        val jsonListBook: String = gson.toJson(Books.songBook)
-
         val jsonListBookPretty: String = gsonPretty.toJson(Books.songBook)
-
         return jsonListBookPretty
     }
 

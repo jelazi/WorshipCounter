@@ -7,21 +7,15 @@ import android.view.View
 import android.widget.*
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
-
+import kotlinx.android.synthetic.main.activity_song.*
 
 
 class SongActivity : AppCompatActivity() {
-
-    var lblNameSong: TextView? = null
-    var lblPageSong: TextView? = null
-    var btnSaveSong: Button? = null
-    var datesSong: ListView? = null
 
     var song: Song? = null
 
     var isChangeName = false
     var isChangePage = false
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,19 +27,17 @@ class SongActivity : AppCompatActivity() {
     }
 
     fun initItems () {
-        lblNameSong = findViewById(R.id.name_song)
-        lblPageSong = findViewById(R.id.page_song)
-        btnSaveSong = findViewById(R.id.btn_save_song)
-        datesSong = findViewById(R.id.dates_song)
+
+        name_song.text
 
         initListeners()
 
         if (song != null) {
-            lblNameSong?.setText(song?.name)
-            lblPageSong?.setText(song?.page.toString())
+            name_song.text = (song?.name)
+            page_song.text = (song?.page.toString())
 
             val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, song?.getDates())
-            datesSong?.adapter = adapter
+            dates_song.adapter = adapter
 
 
 
@@ -53,27 +45,27 @@ class SongActivity : AppCompatActivity() {
         var totalHeight = 0
         var adapterCount = adapter.getCount()
         for (size in 0 until adapterCount) {
-            var listItem: View = adapter.getView(size, null, datesSong)
+            var listItem: View = adapter.getView(size, null, dates_song)
             listItem.measure(0, 0)
             totalHeight += listItem.getMeasuredHeight()
         }
         // Change Height of ListView
-        var params = datesSong?.getLayoutParams()
-        params?.height = (totalHeight + (datesSong?.getDividerHeight()!! * (adapterCount)))
-        datesSong?.setLayoutParams(params)
+        var params = dates_song.getLayoutParams()
+        params?.height = (totalHeight + (dates_song.getDividerHeight()!! * (adapterCount)))
+        dates_song.setLayoutParams(params)
 
         }
 
     }
 
     fun initListeners () {
-        lblNameSong?.setOnClickListener {
+        name_song.setOnClickListener {
             changeName()
         }
-        lblPageSong?.setOnClickListener {
+        page_song.setOnClickListener {
             changePage()
         }
-        btnSaveSong?.setOnClickListener {
+        btn_save_song.setOnClickListener {
             saveSong()
         }
     }
@@ -89,11 +81,11 @@ class SongActivity : AppCompatActivity() {
             LinearLayout.LayoutParams.MATCH_PARENT
         )
         input.layoutParams = lp
-        input.setText(lblNameSong?.text)
+        input.setText(name_song.text)
         builder.setView(input)
 
         builder.setPositiveButton("ANO"){dialog, which ->
-            lblNameSong?.setText(input.text)
+            name_song.setText(input.text)
             isChangeName = true
         }
 
@@ -114,12 +106,11 @@ class SongActivity : AppCompatActivity() {
             LinearLayout.LayoutParams.MATCH_PARENT
         )
         input.layoutParams = lp
-        input.setText(lblPageSong?.text)
+        input.setText(page_song.text)
         builder.setView(input)
 
         builder.setPositiveButton("ANO"){dialog, which ->
-            // Do something when user press the positive button
-            lblPageSong?.setText(input.text)
+            page_song.setText(input.text)
             isChangePage = true
         }
 
@@ -131,21 +122,21 @@ class SongActivity : AppCompatActivity() {
     }
 
     fun saveSong () {
-        if (lblNameSong?.text!!.isEmpty()) {
+        if (name_song.text.isEmpty()) {
             Toast.makeText(this@SongActivity, "Pole jméno nesmí být prázdné.", Toast.LENGTH_SHORT).show()
             return
         }
 
-        if (lblPageSong?.text!!.isEmpty()) {
+        if (name_song.text.isEmpty()) {
             Toast.makeText(this@SongActivity, "Pole stránka nesmí být prázdné.", Toast.LENGTH_SHORT).show()
             return
         }
 
         if (isChangeName) {
-            song?.name = lblNameSong?.text.toString()
+            song?.name = name_song.text.toString()
         }
         if (isChangePage) {
-            song?.page = lblPageSong?.text.toString().toInt()
+            song?.page = page_song.text.toString().toInt()
         }
         Books.changeSong(song!!)
         finish()

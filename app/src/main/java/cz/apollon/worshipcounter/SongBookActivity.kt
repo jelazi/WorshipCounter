@@ -13,13 +13,13 @@ import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.mancj.materialsearchbar.MaterialSearchBar
+import kotlinx.android.synthetic.main.activity_song_book.*
 import java.io.Serializable
 
 
 class SongBookActivity : AppCompatActivity() {
 
   var editable: String? = null
-    var lv: ListView? = null
     var songBookNames: Array<String> = arrayOf()
     var songBookLastDate: Array<String> = arrayOf()
     var songBookPages: Array<String> = arrayOf()
@@ -31,7 +31,6 @@ class SongBookActivity : AppCompatActivity() {
         setContentView(R.layout.activity_song_book)
 
         //REFERENCE MATERIALSEARCHBAR AND LISTVIEW
-        lv = findViewById(R.id.mListView) as ListView
         val searchBar = findViewById(R.id.searchBar) as MaterialSearchBar
         searchBar.setHint("Search..")
         searchBar.setSpeechMode(true)
@@ -46,7 +45,7 @@ class SongBookActivity : AppCompatActivity() {
 
         //ADAPTER
        songListadapter = SongListAdapter(this, songBookPages, songBookNames, songBookLastDate)
-        lv?.setAdapter(songListadapter)
+        mListView.setAdapter(songListadapter)
 
         //SEARCHBAR TEXT CHANGE LISTENER
         searchBar.addTextChangeListener(object : TextWatcher {
@@ -65,7 +64,7 @@ class SongBookActivity : AppCompatActivity() {
         })
 
         //LISTVIEW ITEM CLICKED
-        lv?.setOnItemClickListener(object : AdapterView.OnItemClickListener {
+        mListView.setOnItemClickListener(object : AdapterView.OnItemClickListener {
             override fun onItemClick(adapterView: AdapterView<*>, view: View, i: Int, l: Long) {
                 var choiceSong = Books.songBook.get(i)
                 if (editable?.toBoolean()!!) {
@@ -73,7 +72,7 @@ class SongBookActivity : AppCompatActivity() {
                 } else {
                     val resultIntent = Intent()
                     resultIntent.putExtra(name, choiceSong.name)
-                    resultIntent.putExtra(ID, choiceSong.ID.toString())
+                    resultIntent.putExtra(ID, choiceSong.id.toString())
                     setResult(Activity.RESULT_OK, resultIntent)
                     finish()
                 }
@@ -91,7 +90,7 @@ class SongBookActivity : AppCompatActivity() {
         songBookLastDate = SongManager.getSongbookItems("lastDate")
         songBookPages = SongManager.getSongbookItems("page")
         val songListadapter = SongListAdapter(this, songBookPages, songBookNames, songBookLastDate)
-        lv?.setAdapter(songListadapter)
+        mListView.setAdapter(songListadapter)
 
     }
 
@@ -174,23 +173,23 @@ class SongBookActivity : AppCompatActivity() {
 
     fun addNewSong (name: String, page: Int) {
         var song: Song = Song(name, page)
-        val result = Books.addSong(song)
-        showMyDialog(result)
+        val typeDialog = Books.addSong(song)
+        showMyDialog(typeDialog)
         onResume()
     }
 
-    fun showMyDialog (result: Int) {
-        when (result) {
-            -1 -> {
+    fun showMyDialog (typeDialog: TypeDialog) {
+        when (typeDialog) {
+            TypeDialog.IS_SAME_SONG -> {
                 Toast.makeText(this@SongBookActivity, "Již uložená píseň má stejný název. Použijte jiný název", Toast.LENGTH_SHORT).show()
             }
-            -2 -> {
+            TypeDialog.IS_SAME_PAGE -> {
                 Toast.makeText(this@SongBookActivity, "Již uložená píseň má stejnou stránku. Použijte jinou stránku", Toast.LENGTH_SHORT).show()
             }
-            0 -> {
+            TypeDialog.NO_DIALOG -> {
 
             }
-            1 -> {
+            TypeDialog.SONG_CREATE -> {
                 Toast.makeText(this@SongBookActivity, "Píseň je vytvořena", Toast.LENGTH_SHORT).show()
             }
             else -> {

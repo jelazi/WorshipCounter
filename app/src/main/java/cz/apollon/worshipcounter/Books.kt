@@ -8,34 +8,34 @@ object Books {
     private set
 
 
-    fun addSong (song: Song): Int {
+    fun addSong (song: Song): TypeDialog {
         if (isSameName(song)) {
-            return -1
+            return TypeDialog.IS_SAME_SONG
         }
         if (isSamePage(song)) {
-            return -2
+            return TypeDialog.IS_SAME_PAGE
         }
 
-        song.ID = ++countSongID
+        song.id = ++countSongID
         songBook.add(song)
-        return 1
+        return TypeDialog.SONG_CREATE
     }
 
     fun changeSong (song: Song) {
-        var index = getSongIndexByID(song.ID)
+        val index = getSongIndexByID(song.id)
 
         if (songBook[index!!].name.compareTo(song.name) != 0) {
-            songBook[index!!].name = song.name
+            songBook[index].name = song.name
         }
-        if (songBook[index!!].page != song.page) {
-            songBook[index!!].page = song.page
+        if (songBook[index].page != song.page) {
+            songBook[index].page = song.page
         }
     }
 
 
     fun removeSong (song: Song) {
         songBook.forEach {
-            if (it.ID == song.ID) {
+            if (it.id == song.id) {
                 songBook.remove(it)
                 countSongID--
             }
@@ -61,7 +61,7 @@ object Books {
     }
 
     fun sortByLastDate () {
-        var sortedList = songBook.sortedWith(compareBy {  it.getLastDate()})
+        val sortedList = songBook.sortedWith(compareBy {  it.getLastDate()})
         songBook = arrayListOf()
         sortedList.forEach {
             songBook.add(it)
@@ -70,14 +70,14 @@ object Books {
 
     fun getSongByID (id: Int): Song? {
         songBook.forEach {
-            if (it.ID == id) return it
+            if (it.id == id) return it
         }
         return null
     }
 
     fun getSongIndexByID (id: Int): Int? {
         for (i in songBook.indices) {
-            if (songBook[i].ID == id) {
+            if (songBook[i].id == id) {
                 return i
             }
         }

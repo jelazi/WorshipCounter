@@ -33,8 +33,6 @@ class MyDate (var day: Int, var month: Int, var year: Int) : Comparable<MyDate>,
     override  fun toString(): String {
     return "" + day.toString() + ". " + DatePresenter.getNameMonth(month - 1) + " " + year.toString()
     }
-
-
 }
 
 

@@ -34,7 +34,7 @@ class WorshipDay (date: MyDate){
     fun eraseSong (song: Song) {
         var index = -1
         for(i in songs) {
-            if (i.ID == song.ID) {
+            if (i.id == song.id) {
                 index = songs.indexOf(i)
                 break
             }
