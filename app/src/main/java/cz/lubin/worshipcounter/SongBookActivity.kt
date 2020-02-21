@@ -1,4 +1,4 @@
-package cz.apollon.worshipcounter
+package cz.lubin.worshipcounter
 
 import android.app.Activity
 import android.app.AlertDialog
@@ -174,6 +174,7 @@ class SongBookActivity : AppCompatActivity() {
     fun addNewSong (name: String, page: Int) {
         val song = Song(name, page)
         val typeDialog = Books.addSong(song)
+        SongManager.setSongBookToPreferences(this@SongBookActivity)
         showMyDialog(typeDialog)
         onResume()
     }

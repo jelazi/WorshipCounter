@@ -42,6 +42,11 @@
         android:orderInCategory="100"
         android:title="Vymazat všechna data"/>
 
+    <item
+        android:id="@+id/open_google_drive"
+        android:orderInCategory="100"
+        android:title="Otevřít google drive"/>
+
 
 </menu>
 

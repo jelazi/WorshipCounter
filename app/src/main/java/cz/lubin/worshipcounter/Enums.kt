@@ -1,4 +1,4 @@
-package cz.apollon.worshipcounter
+package cz.lubin.worshipcounter
 
 enum class TypeDialog {
     SONG_CREATE,

@@ -1,4 +1,4 @@
-package cz.apollon.worshipcounter
+package cz.lubin.worshipcounter
 
 import org.junit.Test
 

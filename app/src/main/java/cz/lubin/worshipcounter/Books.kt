@@ -1,4 +1,6 @@
-package cz.apollon.worshipcounter
+package cz.lubin.worshipcounter
+
+import android.app.Activity
 
 object Books {
 
@@ -6,6 +8,14 @@ object Books {
     var worshipDayBook: ArrayList<WorshipDay> = arrayListOf()
     var countSongID: Int = 0
     private set
+
+    fun initItems (activity: Activity) {
+        val loadSongBook = SongManager.getSongBookFromPreferences(activity)
+        if (!loadSongBook.isNullOrEmpty()) {
+           songBook = loadSongBook
+        }
+        setLastId()
+    }
 
 
     fun addSong (song: Song): TypeDialog {
@@ -40,6 +50,16 @@ object Books {
                 countSongID--
             }
         }
+    }
+
+    fun setLastId () {
+        var lastId = countSongID
+        songBook.forEach {
+            if (it.id > lastId) {
+                lastId = it.id
+            }
+        }
+        countSongID = lastId + 1
     }
 
     private fun isSameName (song: Song): Boolean {

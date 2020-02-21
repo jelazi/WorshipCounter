@@ -1,15 +1,22 @@
-package cz.apollon.worshipcounter
+package cz.lubin.worshipcounter
 
 import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.os.Message
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.*
+import android.widget.EditText
+import android.widget.LinearLayout
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_worship.*
 import kotlinx.android.synthetic.main.part_day_item.view.*
+
+
 
 class WorshipActivity : AppCompatActivity() {
 
@@ -33,6 +40,8 @@ class WorshipActivity : AppCompatActivity() {
 
         val today = MyDate(DatePresenter.getCurrentDay(), DatePresenter.getCurrentMonth() + 1, DatePresenter.getCurrentYear())
         dayList = WorshipDay(today)
+
+        Books.initItems(this@WorshipActivity)
 
         val control: TypeDialog = SongManager.controlData()
         showMyDialog(control)
@@ -138,6 +147,12 @@ class WorshipActivity : AppCompatActivity() {
                 resetDataDialog()
                 return true
             }
+
+            R.id.open_google_drive -> {
+                connectFtp()
+                return true
+            }
+
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -300,6 +315,7 @@ class WorshipActivity : AppCompatActivity() {
         }
 
         showMyDialog(SongManager.saveDaysData(dayList!!))
+        SongManager.setSongBookToPreferences(this@WorshipActivity)
     }
 
     fun resetDataDialog () {
@@ -309,7 +325,7 @@ class WorshipActivity : AppCompatActivity() {
 
 
         builder.setPositiveButton("ANO"){dialog, which ->
-            SongManager.resetData()
+            SongManager.resetData(this@WorshipActivity)
             resetWorshipDay()
         }
 
@@ -379,5 +395,26 @@ class WorshipActivity : AppCompatActivity() {
             }
         }
     }
+
+    fun connectFtp () {
+        FtpWorshipClient.connectFtp(this, this)
+    }
+
+    val handler: Handler = object : Handler(Looper.getMainLooper()) {
+
+        override fun handleMessage(inputMessage: Message) {
+            // Gets the image task from the incoming Message object.
+            val bundle: Bundle = inputMessage.getData()
+            val correct = bundle.getString("correct")
+            val err = bundle.getString("error")
+            if (!correct.isNullOrEmpty()) {
+                Toast.makeText(this@WorshipActivity, correct, Toast.LENGTH_SHORT).show()
+            }
+            if (!err.isNullOrEmpty()) {
+                Toast.makeText(this@WorshipActivity, err, Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
 }
 

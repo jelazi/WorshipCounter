@@ -1,4 +1,4 @@
-package cz.apollon.worshipcounter
+package cz.lubin.worshipcounter
 
 import android.app.Activity
 
@@ -70,9 +70,10 @@ object SongManager {
         Books.sortByLastDate()
     }
 
-    fun resetData () {
+    fun resetData (activity: Activity) {
         Books.songBook = arrayListOf()
         Books.worshipDayBook = arrayListOf()
+        setSongBookToPreferences(activity)
     }
 
     fun saveDaysData (dayList: WorshipDay): TypeDialog {
@@ -163,9 +164,10 @@ object SongManager {
         return changingSongs
     }
 
-    fun getSongBookFromPreferences (activity: Activity): ArrayList<Song> {
+    fun getSongBookFromPreferences (activity: Activity): ArrayList<Song>? {
        val sharedPref = activity.getSharedPreferences(PREF_NAME, PRIVATE_MODE)
         val songBookString: String = sharedPref.getString(PREF_NAME, "")
+        if (songBookString.isEmpty()) return null
         return JsonParser.jsonToSongBook(songBookString)
     }
 

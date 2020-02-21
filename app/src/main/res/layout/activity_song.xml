@@ -18,7 +18,7 @@
         <TextView
             android:id="@+id/name_song"
             android:layout_width="match_parent"
-            android:layout_height="60sp"
+            android:layout_height="wrap_content"
             android:textAlignment="center"
             android:textSize="40sp"
             android:text="Name of Song" />

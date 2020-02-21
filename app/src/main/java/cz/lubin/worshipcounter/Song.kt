@@ -1,4 +1,4 @@
-package cz.apollon.worshipcounter
+package cz.lubin.worshipcounter
 import java.io.Serializable
 
 class Song (var name: String, var page: Int) : Serializable {

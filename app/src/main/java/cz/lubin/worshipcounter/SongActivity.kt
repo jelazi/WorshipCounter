@@ -1,4 +1,4 @@
-package cz.apollon.worshipcounter
+package cz.lubin.worshipcounter
 
 import android.app.AlertDialog
 import android.os.Bundle
@@ -139,6 +139,7 @@ class SongActivity : AppCompatActivity() {
             song?.page = page_song.text.toString().toInt()
         }
         Books.changeSong(song!!)
+        SongManager.setSongBookToPreferences(this@SongActivity)
         finish()
     }
 }
