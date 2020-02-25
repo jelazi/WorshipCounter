@@ -43,9 +43,14 @@
         android:title="Vymazat všechna data"/>
 
     <item
-        android:id="@+id/open_google_drive"
+        android:id="@+id/send_songbook_ftp"
         android:orderInCategory="100"
-        android:title="Otevřít google drive"/>
+        android:title="Zálohovat data"/>
+
+    <item
+        android:id="@+id/settings"
+        android:orderInCategory="100"
+        android:title="Nastavení"/>
 
 
 </menu>

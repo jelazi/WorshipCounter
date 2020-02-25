@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+<PreferenceCategory android:title="FTP">
+
+    <EditTextPreference
+        android:defaultValue="@string/ftp_address_value"
+        android:key="@string/ftp_address_key"
+        android:summary="@string/ftp_address_value"
+        android:title="@string/ftp_address_title" />
+
+    <EditTextPreference
+        android:defaultValue="@string/ftp_password_value"
+        android:key="@string/ftp_password_key"
+        android:summary="@string/ftp_password_value"
+        android:title="@string/ftp_password_title" />
+
+    <EditTextPreference
+        android:defaultValue="@string/ftp_user_name_value"
+        android:key="@string/ftp_user_name_key"
+        android:summary="@string/ftp_user_name_value"
+        android:title="@string/ftp_user_name_title" />
+
+    <EditTextPreference
+        android:defaultValue="@string/ftp_directory_value"
+        android:key="@string/ftp_directory_key"
+        android:summary="@string/ftp_directory_value"
+        android:title="@string/ftp_directory_title" />
+
+
+
+
+</PreferenceCategory>
+
+</PreferenceScreen>

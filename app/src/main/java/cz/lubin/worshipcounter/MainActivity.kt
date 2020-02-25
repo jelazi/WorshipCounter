@@ -11,6 +11,9 @@ class MainActivity : AppCompatActivity() {
 
         val intent = Intent (this, WorshipActivity::class.java)
         startActivity(intent)
+
+
+
     }
 }
 

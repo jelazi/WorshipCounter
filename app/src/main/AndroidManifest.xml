@@ -16,6 +16,7 @@
         <activity android:name=".WorshipActivity" />
         <activity android:name=".SongBookActivity" />
         <activity android:name=".SongActivity" />
+        <activity android:name=".SettingsActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

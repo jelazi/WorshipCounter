@@ -33,6 +33,7 @@ class WorshipActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_worship)
+        FtpWorshipClient.setDefaultFtpPreferences(this@WorshipActivity)
 
         initItems()
         initListeners()
@@ -148,8 +149,13 @@ class WorshipActivity : AppCompatActivity() {
                 return true
             }
 
-            R.id.open_google_drive -> {
+            R.id.send_songbook_ftp -> {
                 connectFtp()
+                return true
+            }
+
+            R.id.settings -> {
+                openSettings()
                 return true
             }
 
@@ -397,7 +403,7 @@ class WorshipActivity : AppCompatActivity() {
     }
 
     fun connectFtp () {
-        FtpWorshipClient.connectFtp(this, this)
+        FtpWorshipClient.uploadSongsLibraryToFtp(this, this)
     }
 
     val handler: Handler = object : Handler(Looper.getMainLooper()) {
@@ -414,6 +420,11 @@ class WorshipActivity : AppCompatActivity() {
                 Toast.makeText(this@WorshipActivity, err, Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+    fun openSettings () {
+        startActivity(Intent(this@WorshipActivity, SettingsActivity::class.java))
+
     }
 
 }

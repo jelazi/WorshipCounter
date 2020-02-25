@@ -1,10 +1,15 @@
 package cz.lubin.worshipcounter
 
+import android.annotation.SuppressLint
 import android.content.Context
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 import java.io.File
+import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.util.*
+import kotlin.collections.ArrayList
 
 object JsonParser {
 
@@ -21,12 +26,18 @@ object JsonParser {
         return jsonObject
     }
 
-    fun getFileJson (context: Context): File {
+    @SuppressLint("SimpleDateFormat")
+    fun getSongBookFileJson (context: Context): File {
         val songsJson = songBookToJson()
         val path = context.getFilesDir()
         val letDirectory = File(path, "worshipJsons")
         letDirectory.mkdirs()
-        val file = File(letDirectory, "today.json")
+
+        val sdf = SimpleDateFormat("yyyy_M_dd_hh_mm_ss")
+        val currentDate = sdf.format(Date())
+
+
+        val file = File(letDirectory, "$currentDate.json")
         file.writeText(songsJson)
         return file
     }
