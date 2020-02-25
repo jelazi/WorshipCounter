@@ -18,6 +18,7 @@ class SettingsActivity : AppCompatPreference()  {
     override fun onBackPressed() {
         super.onBackPressed()
         FtpWorshipClient.setDefaultFtpPreferences(this)
+        MailManager.setDefaultMailPreferences(this)
     }
 
 
@@ -31,7 +32,20 @@ class SettingsActivity : AppCompatPreference()  {
             bindPreferenceSummaryToValue(findPreference(getString(R.string.ftp_address_key)))
             bindPreferenceSummaryToValue(findPreference(getString(R.string.ftp_password_key)))
             bindPreferenceSummaryToValue(findPreference(getString(R.string.ftp_user_name_key)))
-            bindPreferenceSummaryToValue(findPreference(getString(R.string.ftp_directory_key)))
+            bindPreferenceSummaryToValue(findPreference(getString(R.string.ftp_directory_today_key)))
+            bindPreferenceSummaryToValue(findPreference(getString(R.string.ftp_directory_backup_key)))
+
+
+            bindPreferenceSummaryToValue(findPreference(getString(R.string.smtp_address_key)))
+            bindPreferenceSummaryToValue(findPreference(getString(R.string.smtp_user_name_key)))
+            bindPreferenceSummaryToValue(findPreference(getString(R.string.smtp_password_key)))
+            bindPreferenceSummaryToValue(findPreference(getString(R.string.smtp_port_key)))
+            bindPreferenceSummaryToValue(findPreference(getString(R.string.mail_from_key)))
+            bindPreferenceSummaryToValue(findPreference(getString(R.string.mail_to_key)))
+            bindPreferenceSummaryToValue(findPreference(getString(R.string.mail_subject_key)))
+            bindPreferenceSummaryToValue(findPreference(getString(R.string.mail_message_key)))
+
+
 
         }
     }

@@ -22,14 +22,75 @@
         android:title="@string/ftp_user_name_title" />
 
     <EditTextPreference
-        android:defaultValue="@string/ftp_directory_value"
-        android:key="@string/ftp_directory_key"
-        android:summary="@string/ftp_directory_value"
-        android:title="@string/ftp_directory_title" />
+        android:defaultValue="@string/ftp_directory_today_value"
+        android:key="@string/ftp_directory_today_key"
+        android:summary="@string/ftp_directory_today_value"
+        android:title="@string/ftp_directory_today_title" />
 
-
+    <EditTextPreference
+        android:defaultValue="@string/ftp_directory_backup_value"
+        android:key="@string/ftp_directory_backup_key"
+        android:summary="@string/ftp_directory_backup_value"
+        android:title="@string/ftp_directory_backup_title" />
 
 
 </PreferenceCategory>
+
+    <PreferenceCategory android:title="mail">
+
+
+        <EditTextPreference
+            android:defaultValue="@string/smtp_address_value"
+            android:key="@string/smtp_address_key"
+            android:summary="@string/smtp_address_value"
+            android:title="@string/smtp_address_title" />
+
+
+        <EditTextPreference
+            android:defaultValue="@string/smtp_user_name_value"
+            android:key="@string/smtp_user_name_key"
+            android:summary="@string/smtp_user_name_value"
+            android:title="@string/smtp_user_name_title" />
+
+        <EditTextPreference
+            android:defaultValue="@string/smtp_password_value"
+            android:key="@string/smtp_password_key"
+            android:summary="@string/smtp_password_value"
+            android:title="@string/smtp_password_title" />
+
+        <EditTextPreference
+            android:defaultValue="@string/smtp_port_value"
+            android:key="@string/smtp_port_key"
+            android:summary="@string/smtp_port_value"
+            android:title="@string/smtp_port_title" />
+
+        <EditTextPreference
+            android:defaultValue="@string/mail_from_value"
+            android:key="@string/mail_from_key"
+            android:summary="@string/mail_from_value"
+            android:title="@string/mail_from_title" />
+
+
+        <EditTextPreference
+            android:defaultValue="@string/mail_to_value"
+            android:key="@string/mail_to_key"
+            android:summary="@string/mail_to_value"
+            android:title="@string/mail_to_title" />
+
+        <EditTextPreference
+            android:defaultValue="@string/mail_subject_value"
+            android:key="@string/mail_subject_key"
+            android:summary="@string/mail_subject_value"
+            android:title="@string/mail_subject_title" />
+
+        <EditTextPreference
+            android:defaultValue="@string/mail_message_value"
+            android:key="@string/mail_message_key"
+            android:summary="@string/mail_message_value"
+            android:title="@string/mail_message_title" />
+
+
+    </PreferenceCategory>
+
 
 </PreferenceScreen>

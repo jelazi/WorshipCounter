@@ -1,5 +1,7 @@
 package cz.lubin.worshipcounter
 
+import java.lang.StringBuilder
+
 class WorshipDay (date: MyDate){
     var date = date
     var orders: ArrayList<Int> = arrayListOf()
@@ -11,6 +13,7 @@ class WorshipDay (date: MyDate){
 
 
     fun addSong (order: Int, song: Song, namePart: String) {
+
         orders.add(order)
         songs.add(song)
         namesPart.add(namePart)
@@ -60,6 +63,21 @@ class WorshipDay (date: MyDate){
             songs.removeAt(index)
             namesPart.removeAt(index)
         }
+    }
+
+
+    fun getMessageForMail (): String {
+        var message = ""
+
+        message += "Datum: " + this.date.toString() + "\n"
+
+        message += "Návrhy: " + "\n"
+
+        for (index in orders.indices) {
+            message += namesPart[index] + "\t" + "jméno: "+ songs[index].name + "\t" + "strana: " + songs[index].page.toString() + "\n"
+        }
+
+        return message
     }
 
 }

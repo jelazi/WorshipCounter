@@ -1,11 +1,10 @@
 package cz.lubin.worshipcounter
 
 import android.app.Activity
+import android.preference.PreferenceManager
 
 object SongManager {
 
-
-    private var PRIVATE_MODE = 0
     private val PREF_NAME = "songbook_pref"
 
 
@@ -165,16 +164,16 @@ object SongManager {
     }
 
     fun getSongBookFromPreferences (activity: Activity): ArrayList<Song>? {
-       val sharedPref = activity.getSharedPreferences(PREF_NAME, PRIVATE_MODE)
-        val songBookString: String = sharedPref.getString(PREF_NAME, "")
+        val preference = PreferenceManager.getDefaultSharedPreferences(activity)
+        val songBookString: String = preference.getString(PREF_NAME, "")
         if (songBookString.isEmpty()) return null
         return JsonParser.jsonToSongBook(songBookString)
     }
 
     fun setSongBookToPreferences (activity: Activity): Boolean {
         val songBookString: String = JsonParser.songBookToJson()
-        val sharedPref = activity.getSharedPreferences(PREF_NAME, PRIVATE_MODE)
-        val editor = sharedPref.edit()
+        val preference = PreferenceManager.getDefaultSharedPreferences(activity)
+        val editor = preference.edit()
         editor.putString(PREF_NAME, songBookString)
         editor.apply()
         return true

@@ -10,6 +10,7 @@ import android.text.TextWatcher
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.view.WindowManager
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.mancj.materialsearchbar.MaterialSearchBar
@@ -141,8 +142,10 @@ class SongBookActivity : AppCompatActivity() {
         pageLayout.orientation = LinearLayout.HORIZONTAL
         nameLayout.orientation = LinearLayout.HORIZONTAL
         editNameSong.setText("Nová píseň")
+        editNameSong.setSelectAllOnFocus(true)
         builder.setView(editNameSong)
         editPageSong.setText("0")
+        editPageSong.setSelectAllOnFocus(true)
         editPageSong.inputType = InputType.TYPE_CLASS_NUMBER
 
         nameLayout.addView(descNameSong)
@@ -169,6 +172,7 @@ class SongBookActivity : AppCompatActivity() {
 
         val dialog: AlertDialog = builder.create()
         dialog.show()
+        dialog.window!!.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE)
     }
 
     fun addNewSong (name: String, page: Int) {

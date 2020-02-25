@@ -3,10 +3,12 @@ package cz.lubin.worshipcounter
 import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.os.Message
+import android.preference.PreferenceManager
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.EditText
@@ -29,18 +31,25 @@ class WorshipActivity : AppCompatActivity() {
 
     var choisePartDay: PartDayItem? = null
 
+    var currentDate: MyDate? = null
+
+
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_worship)
         FtpWorshipClient.setDefaultFtpPreferences(this@WorshipActivity)
+        MailManager.setDefaultMailPreferences(this@WorshipActivity)
+
 
         initItems()
         initListeners()
         resetWorshipDay()
 
-        val today = MyDate(DatePresenter.getCurrentDay(), DatePresenter.getCurrentMonth() + 1, DatePresenter.getCurrentYear())
-        dayList = WorshipDay(today)
+        currentDate = MyDate(DatePresenter.getCurrentDay(), DatePresenter.getCurrentMonth() + 1, DatePresenter.getCurrentYear())
+        dayList = WorshipDay(currentDate!!)
 
         Books.initItems(this@WorshipActivity)
 
@@ -119,10 +128,7 @@ class WorshipActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            R.id.action_settings -> {
-                Toast.makeText(applicationContext, "click on setting", Toast.LENGTH_LONG).show()
-                true
-            }
+
 
             R.id.add_part_day -> {
                 addNewPartDialog()
@@ -156,6 +162,11 @@ class WorshipActivity : AppCompatActivity() {
 
             R.id.settings -> {
                 openSettings()
+                return true
+            }
+
+            R.id.send_message -> {
+                sendMessage()
                 return true
             }
 
@@ -220,10 +231,10 @@ class WorshipActivity : AppCompatActivity() {
     fun datePicker () {
         val dpd = DatePickerDialog(this, DatePickerDialog.OnDateSetListener { view, selectedYear, selectedMonth, selectedDay ->
             label_date.setText(DatePresenter.getSelectedDate(selectedYear, selectedMonth, selectedDay))
-            val myDate = MyDate(selectedDay, selectedMonth + 1, selectedYear)
+            currentDate = MyDate(selectedDay, selectedMonth + 1, selectedYear)
             val daylistDate = dayList?.date
-            if (dayList != null && daylistDate?.compareTo(myDate) != 0) {
-                dayList = WorshipDay(myDate)
+            if (dayList != null && daylistDate?.compareTo(currentDate!!) != 0) {
+                dayList = WorshipDay(currentDate!!)
                 resetWorshipDay()
             }
 
@@ -315,7 +326,7 @@ class WorshipActivity : AppCompatActivity() {
         listDaySong.forEach {
 
             if (it != 0) {
-                dayList?.addSong(index, Books.getSongByID(it)!!, listPartDayItem[index].description_part.toString())
+                dayList?.addSong(index, Books.getSongByID(it)!!, listPartDayItem[index].description_part.text.toString())
             }
             index ++
         }
@@ -333,6 +344,7 @@ class WorshipActivity : AppCompatActivity() {
         builder.setPositiveButton("ANO"){dialog, which ->
             SongManager.resetData(this@WorshipActivity)
             resetWorshipDay()
+            PreferenceManager.getDefaultSharedPreferences(this).edit().clear().apply()
         }
 
         builder.setNeutralButton("Ne"){_,_ ->
@@ -344,6 +356,7 @@ class WorshipActivity : AppCompatActivity() {
 
     fun loadTestData () {
         SongManager.createDefaultSongBook()
+        SongManager.setSongBookToPreferences(this)
         Toast.makeText(this@WorshipActivity, "Testovací data jsou načtena.", Toast.LENGTH_SHORT).show()
     }
 
@@ -354,8 +367,7 @@ class WorshipActivity : AppCompatActivity() {
                 builder.setTitle("Prázdná data")
                 builder.setMessage("V aplikaci nejsou uložena žádná data. Chcete nahrát testovací písně?")
                 builder.setPositiveButton("ANO"){dialog, which ->
-                    SongManager.createDefaultSongBook()
-                    Toast.makeText(this@WorshipActivity, "Testovací data jsou načtena.", Toast.LENGTH_SHORT).show()
+                    loadTestData()
                 }
 
                 builder.setNeutralButton("Ne"){_,_ ->
@@ -414,10 +426,10 @@ class WorshipActivity : AppCompatActivity() {
             val correct = bundle.getString("correct")
             val err = bundle.getString("error")
             if (!correct.isNullOrEmpty()) {
-                Toast.makeText(this@WorshipActivity, correct, Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@WorshipActivity, correct, Toast.LENGTH_LONG).show()
             }
             if (!err.isNullOrEmpty()) {
-                Toast.makeText(this@WorshipActivity, err, Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@WorshipActivity, err, Toast.LENGTH_LONG).show()
             }
         }
     }
@@ -425,6 +437,37 @@ class WorshipActivity : AppCompatActivity() {
     fun openSettings () {
         startActivity(Intent(this@WorshipActivity, SettingsActivity::class.java))
 
+    }
+
+    fun getBodyMessage (preference: SharedPreferences): String {
+        var message = "\n"
+
+        message += preference.getString(this.getString(R.string.mail_message_key), this.getString(R.string.mail_message_value))!! + "\n"
+
+        var customDayList = WorshipDay(currentDate!!)
+
+        for (index in listDaySong.indices) {
+
+            if (listDaySong[index] != 0) {
+                customDayList?.addSong(index, Books.getSongByID(listDaySong[index])!!, listPartDayItem[index].description_part.text.toString())
+            }
+        }
+
+        message += customDayList!!.getMessageForMail()
+
+        return message
+    }
+
+    fun sendMessage () {
+        val preference = PreferenceManager.getDefaultSharedPreferences(this)
+
+        MailManager.send(
+            this,
+            preference.getString(this.getString(R.string.mail_to_key), this.getString(R.string.mail_to_value))!!,
+            preference.getString(this.getString(R.string.mail_from_key), this.getString(R.string.mail_from_value))!!,
+            preference.getString(this.getString(R.string.mail_subject_key), this.getString(R.string.mail_subject_value))!!,
+            getBodyMessage(preference)
+        )
     }
 
 }

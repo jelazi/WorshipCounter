@@ -4,6 +4,7 @@ import android.app.AlertDialog
 import android.os.Bundle
 import android.text.InputType
 import android.view.View
+import android.view.WindowManager
 import android.widget.*
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
@@ -82,6 +83,7 @@ class SongActivity : AppCompatActivity() {
         )
         input.layoutParams = lp
         input.setText(name_song.text)
+        input.requestFocus()
         builder.setView(input)
 
         builder.setPositiveButton("ANO"){dialog, which ->
@@ -94,6 +96,7 @@ class SongActivity : AppCompatActivity() {
 
         val dialog: AlertDialog = builder.create()
         dialog.show()
+        dialog.window!!.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE)
     }
     fun changePage() {
         val builder = AlertDialog.Builder(this@SongActivity)
@@ -107,6 +110,7 @@ class SongActivity : AppCompatActivity() {
         )
         input.layoutParams = lp
         input.setText(page_song.text)
+        input.requestFocus()
         builder.setView(input)
 
         builder.setPositiveButton("ANO"){dialog, which ->
@@ -119,6 +123,7 @@ class SongActivity : AppCompatActivity() {
         }
         val dialog: AlertDialog = builder.create()
         dialog.show()
+        dialog.window!!.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE)
     }
 
     fun saveSong () {

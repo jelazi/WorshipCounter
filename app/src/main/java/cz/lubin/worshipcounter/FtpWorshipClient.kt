@@ -15,7 +15,8 @@ object FtpWorshipClient {
     var address = ""
     var user = ""
     var password = ""
-    var directory = ""
+    var directoryToday = ""
+    var directoryBackup = ""
 
     var worshipActivity: WorshipActivity? = null
 
@@ -26,10 +27,15 @@ object FtpWorshipClient {
         val file = JsonParser.getSongBookFileJson(context)
         worshipActivity = activity
 
+
         Thread {
             try {
                 connectFtp()
+                removeOldData(context)
                 uploadFileToFtp(file)
+
+
+
                 disconnectFtp()
                 val msg: Message = worshipActivity!!.handler.obtainMessage()
                 val bundle = Bundle()
@@ -50,13 +56,36 @@ object FtpWorshipClient {
         }.start()
     }
 
+    private fun removeOldData (context: Context) {
+        var list = mFtpClient.list()
+        var array: ArrayList<File> = arrayListOf()
+        mFtpClient.changeDirectory(directoryToday)
+
+        for ((index) in list.withIndex()) {
+            val path = context.getFilesDir()
+            var file = File(path, list.get(index).name)
+            mFtpClient.download(list.get(index).name, file)
+            array.add(file)
+        }
+
+        for ((index) in list.withIndex()) {
+            mFtpClient.deleteFile(list.get(index).name)
+        }
+
+        mFtpClient.changeDirectory(directoryBackup)
+        for ((index) in array.withIndex()) {
+            mFtpClient.upload(array.get(index))
+        }
+
+    }
+
 
     private fun connectFtp () {
         mFtpClient.connect(address)
 
         mFtpClient.login(user, password)
         mFtpClient.type = FTPClient.TYPE_BINARY
-        mFtpClient.changeDirectory(directory)
+        mFtpClient.changeDirectory(directoryToday)
     }
 
     private fun disconnectFtp () {
@@ -64,6 +93,7 @@ object FtpWorshipClient {
     }
 
     private fun uploadFileToFtp (file: File) {
+        mFtpClient.changeDirectory(directoryToday)
         if (mFtpClient.isConnected) {
             mFtpClient.upload(file)
             var list = mFtpClient.list()
@@ -75,9 +105,11 @@ object FtpWorshipClient {
     fun setDefaultFtpPreferences (activity: Activity) {
         var preference = PreferenceManager.getDefaultSharedPreferences(activity)
 
-        address = preference.getString("ftp_address", activity.getString(R.string.ftp_address_value))
-        user = preference.getString("ftp_user", activity.getString(R.string.ftp_user_name_value))
-        password = preference.getString("ftp_password", activity.getString(R.string.ftp_password_value))
-        directory = preference.getString("ftp_directory", activity.getString(R.string.ftp_directory_value))
+        address = preference.getString(activity.getString(R.string.ftp_address_key), activity.getString(R.string.ftp_address_value))
+        user = preference.getString(activity.getString(R.string.ftp_user_name_key), activity.getString(R.string.ftp_user_name_value))
+        password = preference.getString(activity.getString(R.string.ftp_password_key), activity.getString(R.string.ftp_password_value))
+        directoryToday = preference.getString(activity.getString(R.string.ftp_directory_today_key), activity.getString(R.string.ftp_directory_today_value))
+        directoryBackup = preference.getString(activity.getString(R.string.ftp_directory_backup_key), activity.getString(R.string.ftp_directory_backup_value))
+
     }
 }

@@ -26,6 +26,19 @@ object JsonParser {
         return jsonObject
     }
 
+    fun worshipDayBookToJson ():String {
+        val gsonPretty = GsonBuilder().setPrettyPrinting().create()
+        val jsonListBookPretty: String = gsonPretty.toJson(Books.worshipDayBook)
+        return jsonListBookPretty
+    }
+
+    fun jsonToWorshipDayBook (json: String):ArrayList<WorshipDay> {
+        val gson = Gson()
+        val itemType = object : TypeToken<ArrayList<WorshipDay>>() {}.type
+        val jsonObject = gson.fromJson<ArrayList<WorshipDay>>(json, itemType)
+        return jsonObject
+    }
+
     @SuppressLint("SimpleDateFormat")
     fun getSongBookFileJson (context: Context): File {
         val songsJson = songBookToJson()

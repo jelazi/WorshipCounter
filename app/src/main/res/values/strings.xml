@@ -7,18 +7,74 @@
     <string name="ftp_address_value">klokanek.endora.cz</string>
     <string name="ftp_password_value">Adventisti777</string>
     <string name="ftp_user_name_value">worship</string>
-    <string name="ftp_directory_value">/backup/</string>
+    <string name="ftp_directory_today_value">/today/</string>
+    <string name="ftp_directory_backup_value">/backup/</string>
+
 
     <string name="ftp_address_title">Adresa</string>
     <string name="ftp_password_title">Heslo</string>
     <string name="ftp_user_name_title">Uživatelské jméno</string>
-    <string name="ftp_directory_title">Adresář</string>
+    <string name="ftp_directory_today_title">Adresář pro aktuální</string>
+    <string name="ftp_directory_backup_title">Adresář pro zálohu</string>
+
 
 
     <string name="ftp_address_key">ftp_address</string>
     <string name="ftp_password_key">ftp_password</string>
     <string name="ftp_user_name_key">ftp_user</string>
-    <string name="ftp_directory_key">ftp_directory</string>
+    <string name="ftp_directory_today_key">ftp_directory_today</string>
+    <string name="ftp_directory_backup_key">ftp_directory_backup</string>
+
+
+    <string name="smtp_address_value">smtp.gmail.com</string>
+    <string name="smtp_address_title">Adresa SMTP serveru</string>
+    <string name="smtp_address_key">smtp_address</string>
+
+
+
+    <string name="smtp_user_name_value">worship.breclav@gmail.com</string>
+    <string name="smtp_user_name_title">Přihlašovací jméno pro mail</string>
+    <string name="smtp_user_name_key">smtp_user_name</string>
+
+
+
+
+    <string name="smtp_password_value">Adventisti777</string>
+    <string name="smtp_password_title">Heslo pro mail</string>
+    <string name="smtp_password_key">smtp_password</string>
+
+
+
+    <string name="smtp_port_value">465</string>
+    <string name="smtp_port_title">Smtp port</string>
+    <string name="smtp_port_key">smtp_port</string>
+
+
+
+    <string name="mail_from_value">worship.breclav@gmail.com</string>
+    <string name="mail_from_title">Emailová adresa odesilatele</string>
+    <string name="mail_from_key">mail_from</string>
+
+
+
+    <string name="mail_to_value">lzizka@gmail.com, jelazizkovi@gmail.com</string>
+    <string name="mail_to_title">Emailové adresy příjemců</string>
+    <string name="mail_to_key">mail_to</string>
+
+
+
+
+    <string name="mail_subject_value">Návrhy písní</string>
+    <string name="mail_subject_title">Předmět zprávy</string>
+    <string name="mail_subject_key">mail_subject</string>
+
+
+
+    <string name="mail_message_value">Zde jsou návrhy na písně: </string>
+    <string name="mail_message_title">Obsah zprávy</string>
+    <string name="mail_message_key">mail_message</string>
+
+
 
 
 </resources>
