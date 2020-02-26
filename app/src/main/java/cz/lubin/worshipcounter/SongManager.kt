@@ -125,6 +125,54 @@ object SongManager {
         return songbookNames
     }
 
+    fun getSongbookByName (nameBooks:ArrayList<String>, songBooks:ArrayList<Song>): ArrayList<Song> {
+        var songBookResult: ArrayList<Song> = arrayListOf()
+
+        for (name in nameBooks) {
+            var song = getSongByName(name, songBooks)
+            if (song != null) {
+                songBookResult.add(song)
+            }
+        }
+        return songBookResult
+    }
+
+    fun getSongByName (name: String, songBook: ArrayList<Song>): Song? {
+        for (song in songBook) {
+            if (name.compareTo(song.name) == 0) {
+                return song
+            }
+        }
+        return null
+    }
+
+    fun getSongbookItems (nameItems: String, songB:ArrayList<Song>): Array<String> {
+        var songbookNames: Array<String> = arrayOf()
+        if (nameItems == "name") {
+            songB.forEach {
+                songbookNames += it.name
+            }
+        } else if (nameItems == "ID") {
+            songB.forEach {
+                songbookNames += it.id.toString()
+            }
+        } else if (nameItems == "page") {
+            songB.forEach {
+                songbookNames += it.page.toString()
+            }
+        } else if (nameItems == "lastDate") {
+            songB.forEach {
+                if (it.useDates.isEmpty()) {
+                    songbookNames += "---"
+                } else {
+                    songbookNames += it.getLastDate().toString()
+                }
+            }
+        }
+
+        return songbookNames
+    }
+
 
     fun compareListBooks (firstBook: ArrayList<Song>, secondBook: ArrayList<Song>):Boolean {
         firstBook.forEach {

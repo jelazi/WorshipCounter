@@ -21,9 +21,6 @@ import java.io.Serializable
 class SongBookActivity : AppCompatActivity() {
 
   var editable: String? = null
-    var songBookNames: Array<String> = arrayOf()
-    var songBookLastDate: Array<String> = arrayOf()
-    var songBookPages: Array<String> = arrayOf()
     var songListadapter: SongListAdapter? = null
 
 
@@ -39,13 +36,11 @@ class SongBookActivity : AppCompatActivity() {
         editable = intent.getStringExtra("editable")
 
 
-        songBookNames = SongManager.getSongbookItems("name")
-        songBookLastDate = SongManager.getSongbookItems("lastDate")
-        songBookPages = SongManager.getSongbookItems("page")
+
 
 
         //ADAPTER
-       songListadapter = SongListAdapter(this, songBookPages, songBookNames, songBookLastDate)
+       songListadapter = SongListAdapter(this, Books.songBook)
         mListView.setAdapter(songListadapter)
 
         //SEARCHBAR TEXT CHANGE LISTENER
@@ -87,10 +82,8 @@ class SongBookActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         Books.sortByLastDate()
-        songBookNames = SongManager.getSongbookItems("name")
-        songBookLastDate = SongManager.getSongbookItems("lastDate")
-        songBookPages = SongManager.getSongbookItems("page")
-        val songListadapter = SongListAdapter(this, songBookPages, songBookNames, songBookLastDate)
+
+        val songListadapter = SongListAdapter(this, Books.songBook)
         mListView.setAdapter(songListadapter)
 
     }
