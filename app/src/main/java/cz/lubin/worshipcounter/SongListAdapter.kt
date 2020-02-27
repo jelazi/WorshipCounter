@@ -69,14 +69,9 @@ class SongListAdapter (private val context: Activity, private val songBook:Array
             @Suppress("UNCHECKED_CAST")
             val filtered = results.values as ArrayList<String>
 
-            if (results.count > 0) {
                 songB = SongManager.getSongbookByName(filtered, songB)
                 notifyDataSetChanged()
-                clear()
-
-            } else {
-                notifyDataSetInvalidated()
-            }
+                //clear()
 
         }
 
