@@ -1,6 +1,8 @@
 package cz.lubin.worshipcounter
 
+import android.app.Activity
 import android.app.AlertDialog
+import android.content.Intent
 import android.os.Bundle
 import android.text.InputType
 import android.view.View
@@ -145,6 +147,8 @@ class SongActivity : AppCompatActivity() {
         }
         Books.changeSong(song!!)
         SongManager.setSongBookToPreferences(this@SongActivity)
+        val resultIntent = Intent()
+        setResult(Activity.RESULT_OK, resultIntent)
         finish()
     }
 }

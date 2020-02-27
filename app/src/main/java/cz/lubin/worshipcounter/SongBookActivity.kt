@@ -22,6 +22,8 @@ class SongBookActivity : AppCompatActivity() {
     var songListadapter: SongListAdapter? = null
     val info = ArrayList<HashMap<String, String>>()
     var isChangeSongBook: Boolean = false
+    var listview: ListView? = null
+    private val EDIT_SONG = 1
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,7 +35,7 @@ class SongBookActivity : AppCompatActivity() {
 
         editable = intent.getStringExtra("editable")
 
-        val listview = findViewById(R.id.mListView) as ListView
+        listview = findViewById(R.id.mListView) as ListView
 
         var hashMap: HashMap<String, String> = HashMap<String, String>()
 
@@ -54,7 +56,7 @@ class SongBookActivity : AppCompatActivity() {
         }
 
        songListadapter = SongListAdapter(this, info)
-        listview.adapter = (songListadapter)
+        listview?.adapter = (songListadapter)
 
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
@@ -91,8 +93,8 @@ class SongBookActivity : AppCompatActivity() {
 
         if (isChangeSongBook) {
             isChangeSongBook = false
-            val songListadapter = SongListAdapter(this, info)
-            mListView.setAdapter(songListadapter)
+            songListadapter = SongListAdapter(this, info)
+            listview?.setAdapter(songListadapter)
         }
     }
 
@@ -113,8 +115,6 @@ class SongBookActivity : AppCompatActivity() {
                 dialogAddNewSong()
                 return true
             }
-
-
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -122,7 +122,8 @@ class SongBookActivity : AppCompatActivity() {
     fun editSong (song: Song)  {
         val intent = Intent(this, SongActivity::class.java)
         intent.putExtra("song", song as Serializable)
-        startActivity(intent)
+        intent.putExtra("edit",false.toString())
+        startActivityForResult(intent, EDIT_SONG)
     }
 
     fun dialogAddNewSong () {
@@ -201,6 +202,12 @@ class SongBookActivity : AppCompatActivity() {
             else -> {
                 Toast.makeText(this@SongBookActivity, "Nějaká jiná chyba", Toast.LENGTH_SHORT).show()
             }
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == EDIT_SONG && resultCode == RESULT_OK) {
+            isChangeSongBook = true
         }
     }
 
