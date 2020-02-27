@@ -1,88 +1,93 @@
 package cz.lubin.worshipcounter
 
 import android.app.Activity
+import android.content.Context
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.BaseAdapter
+import android.widget.TextView
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
-class SongListAdapter (private val context: Activity, private val songBook:ArrayList<Song>)
-    : ArrayAdapter<String>(context, R.layout.song_item, SongManager.getSongbookItems("name"))  {
 
-    var songB: ArrayList<Song> = songBook
+class SongListAdapter(context: Context, arrayList: ArrayList<HashMap<String, String>>) : BaseAdapter() {
+    var arrayList = arrayList
+    var context = context
+    var tempNameVersionList = ArrayList(arrayList)
 
-    private val filter = SongListFilter(SongManager.getSongbookItems("name", songB))
+    override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
 
-    override fun getView(position: Int, view: View?, parent: ViewGroup): View {
-        val inflater = context.layoutInflater
-        val rowView = inflater.inflate(R.layout.song_item, null, true)
+        var myview = convertView
+        val holder: ViewHolder
 
-        val nameText = rowView.findViewById(R.id.title) as TextView
-        val pageText = rowView.findViewById(R.id.page) as TextView
-        val lastDateText = rowView.findViewById(R.id.last_date) as TextView
 
-        nameText.text = SongManager.getSongbookItems("name", songB)[position]
-        pageText.text = SongManager.getSongbookItems("page", songB)[position]
-        lastDateText.text = SongManager.getSongbookItems("lastDate", songB)[position]
 
-        return rowView
+        if (convertView == null) {
+            val mInflater = (context as Activity).layoutInflater
+
+            myview = mInflater!!.inflate(R.layout.song_item, parent, false)
+
+            holder = ViewHolder()
+            holder.pageHeader = myview!!.findViewById<TextView>(R.id.page) as TextView
+            holder.title = myview!!.findViewById<TextView>(R.id.title) as TextView
+            holder.lastDate = myview!!.findViewById<TextView>(R.id.last_date) as TextView
+
+            myview.setTag(holder)
+        } else {
+            holder = myview!!.getTag() as ViewHolder
+        }
+
+        val map = arrayList.get(position)
+
+        holder.pageHeader!!.setText(map.get("page"))
+        holder.title!!.setText(map.get("name"))
+        holder.lastDate!!.setText(map.get("lastDate"))
+
+        return myview
     }
 
+    override fun getItem(p0: Int): Any {
+        return arrayList.get(p0)
+    }
 
-    override fun getFilter() = filter
+    override fun getItemId(p0: Int): Long {
+        return 0
+    }
 
-    inner class SongListFilter(private val originalList: Array<String>) : Filter() {
+    override fun getCount(): Int {
+        return arrayList.size
+    }
 
-        private val sourceObjects: ArrayList<String> = ArrayList()
+    class ViewHolder {
 
-        init {
-            synchronized (this) {
-                sourceObjects.addAll(originalList)
-            }
-        }
+        var pageHeader: TextView? = null
+        var title: TextView? = null
+        var lastDate: TextView? = null
+    }
 
-        override fun performFiltering(constraint: CharSequence?): FilterResults {
-            if (constraint == null) return FilterResults()
+    fun filter(text: String?) {
 
-            val result = FilterResults()
+        val text = text!!.toLowerCase(Locale.getDefault())
+        val arrayText = text!!.toLowerCase(Locale.getDefault()).split(" ")
 
-            if (constraint.isNotEmpty()) {
-                val filteredList = ArrayList<String>()
+        arrayList.clear()
 
-                sourceObjects.filterTo(filteredList) { isWithinConstraint(it, constraint) }
-
-                result.count = filteredList.size
-                result.values = filteredList
-
-            } else {
-                synchronized(this) {
-                    result.values = sourceObjects
-                    result.count = sourceObjects.size
+        if (text.length == 0) {
+            arrayList.addAll(tempNameVersionList)
+        } else {
+            for (i in 0..tempNameVersionList.size - 1) {
+            var isCorrect = true
+                for (tex in arrayText) {
+                    if (!tempNameVersionList.get(i).get("name")!!.toLowerCase(Locale.getDefault()).contains(tex)) {
+                        isCorrect = false
+                    }
                 }
-
+                if (isCorrect) {
+                    arrayList.add(tempNameVersionList.get(i))
+                }
             }
-            return result
         }
-
-        override fun publishResults(constraint: CharSequence?, results: FilterResults) {
-            if (results.values == null) return
-
-            @Suppress("UNCHECKED_CAST")
-            val filtered = results.values as ArrayList<String>
-
-                songB = SongManager.getSongbookByName(filtered, songB)
-                notifyDataSetChanged()
-                //clear()
-
-        }
-
-
-        override fun convertResultToString(resultValue: Any?): CharSequence {
-            return (resultValue as String)
-        }
-
-        private fun isWithinConstraint(registration: String, constraint: CharSequence): Boolean {
-            return registration.toLowerCase().contains(constraint, true)
-        }
-
+        notifyDataSetChanged()
     }
 }

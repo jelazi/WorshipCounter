@@ -4,62 +4,70 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
-import android.text.Editable
 import android.text.InputType
-import android.text.TextWatcher
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.WindowManager
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import com.mancj.materialsearchbar.MaterialSearchBar
 import kotlinx.android.synthetic.main.activity_song_book.*
 import java.io.Serializable
-
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 class SongBookActivity : AppCompatActivity() {
 
-  var editable: String? = null
+    var editable: String? = null
     var songListadapter: SongListAdapter? = null
+    val info = ArrayList<HashMap<String, String>>()
+    var isChangeSongBook: Boolean = false
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_song_book)
 
-        //REFERENCE MATERIALSEARCHBAR AND LISTVIEW
-        val searchBar = findViewById(R.id.searchBar) as MaterialSearchBar
-        searchBar.setHint("Search..")
-        searchBar.setSpeechMode(true)
+        val searchView = findViewById(R.id.searchView) as SearchView
+
 
         editable = intent.getStringExtra("editable")
 
+        val listview = findViewById(R.id.mListView) as ListView
 
+        var hashMap: HashMap<String, String> = HashMap<String, String>()
 
+        for (i in 0..Books.songBook.size - 1) {
+            hashMap = HashMap()
+            hashMap.put("name", Books.songBook[i].name)
+            if (Books.songBook[i].getLastDate() == null) {
+                hashMap.put("lastDate", "---")
 
-
-        //ADAPTER
-       songListadapter = SongListAdapter(this, Books.songBook)
-        mListView.setAdapter(songListadapter)
-
-        //SEARCHBAR TEXT CHANGE LISTENER
-        searchBar.addTextChangeListener(object : TextWatcher {
-            override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
+            } else {
+                hashMap.put("lastDate", Books.songBook[i].getLastDate().toString())
 
             }
 
-            override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
-                //SEARCH FILTER
-                songListadapter!!.getFilter().filter(charSequence)
+            hashMap.put("page", Books.songBook[i].page.toString())
+
+            info.add(hashMap)
+        }
+
+       songListadapter = SongListAdapter(this, info)
+        listview.adapter = (songListadapter)
+
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return false
             }
 
-            override fun afterTextChanged(editable: Editable) {
-
+            override fun onQueryTextChange(newText: String?): Boolean {
+                val text = newText
+                songListadapter!!.filter(text)
+                return false
             }
         })
 
-        //LISTVIEW ITEM CLICKED
         mListView.setOnItemClickListener(object : AdapterView.OnItemClickListener {
             override fun onItemClick(adapterView: AdapterView<*>, view: View, i: Int, l: Long) {
                 var choiceSong = Books.songBook.get(i)
@@ -75,17 +83,17 @@ class SongBookActivity : AppCompatActivity() {
 
             }
         })
-
-        //end
     }
 
     override fun onResume() {
         super.onResume()
         Books.sortByLastDate()
 
-        val songListadapter = SongListAdapter(this, Books.songBook)
-        mListView.setAdapter(songListadapter)
-
+        if (isChangeSongBook) {
+            isChangeSongBook = false
+            val songListadapter = SongListAdapter(this, info)
+            mListView.setAdapter(songListadapter)
+        }
     }
 
 
