@@ -49,9 +49,24 @@ object JsonParser {
         val sdf = SimpleDateFormat("yyyy_M_dd_hh_mm_ss")
         val currentDate = sdf.format(Date())
 
-
-        val file = File(letDirectory, "$currentDate.json")
+        val file = File(letDirectory, "songs$currentDate.json")
         file.writeText(songsJson)
         return file
     }
+
+    @SuppressLint("SimpleDateFormat")
+    fun getDayBookFileJson (context: Context): File {
+        val daysJson = worshipDayBookToJson()
+        val path = context.getFilesDir()
+        val letDirectory = File(path, "worshipJsons")
+        letDirectory.mkdirs()
+
+        val sdf = SimpleDateFormat("yyyy_M_dd_hh_mm_ss")
+        val currentDate = sdf.format(Date())
+
+        val file = File(letDirectory, "days$currentDate.json")
+        file.writeText(daysJson)
+        return file
+    }
+
 }

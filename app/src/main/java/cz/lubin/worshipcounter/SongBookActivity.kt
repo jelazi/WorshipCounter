@@ -32,9 +32,7 @@ class SongBookActivity : AppCompatActivity() {
 
         val searchView = findViewById(R.id.searchView) as SearchView
 
-
         editable = intent.getStringExtra("editable")
-
         listview = findViewById(R.id.mListView) as ListView
 
         var hashMap: HashMap<String, String> = HashMap<String, String>()
@@ -49,9 +47,7 @@ class SongBookActivity : AppCompatActivity() {
                 hashMap.put("lastDate", Books.songBook[i].getLastDate().toString())
 
             }
-
             hashMap.put("page", Books.songBook[i].page.toString())
-
             info.add(hashMap)
         }
 
@@ -70,19 +66,19 @@ class SongBookActivity : AppCompatActivity() {
             }
         })
 
-        mListView.setOnItemClickListener(object : AdapterView.OnItemClickListener {
+        listview?.setOnItemClickListener(object : AdapterView.OnItemClickListener {
             override fun onItemClick(adapterView: AdapterView<*>, view: View, i: Int, l: Long) {
-                var choiceSong = Books.songBook.get(i)
+                val name = info[i].get("name")
+                var choiceSong = Books.getSongByName(name!!)
                 if (editable?.toBoolean()!!) {
-                    editSong(choiceSong)
+                    editSong(choiceSong!!)
                 } else {
                     val resultIntent = Intent()
-                    resultIntent.putExtra(name, choiceSong.name)
-                    resultIntent.putExtra(ID, choiceSong.id.toString())
+                    resultIntent.putExtra(name, choiceSong!!.name)
+                    resultIntent.putExtra(ID, choiceSong!!.id.toString())
                     setResult(Activity.RESULT_OK, resultIntent)
                     finish()
                 }
-
             }
         })
     }
@@ -180,7 +176,7 @@ class SongBookActivity : AppCompatActivity() {
     fun addNewSong (name: String, page: Int) {
         val song = Song(name, page)
         val typeDialog = Books.addSong(song)
-        SongManager.setSongBookToPreferences(this@SongBookActivity)
+        BooksManager.setSongBookToPreferences(this@SongBookActivity)
         showMyDialog(typeDialog)
         onResume()
     }
@@ -216,6 +212,4 @@ class SongBookActivity : AppCompatActivity() {
         val name = ""
         val ID = ""
     }
-
-
 }

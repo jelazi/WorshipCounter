@@ -3,9 +3,10 @@ package cz.lubin.worshipcounter
 import android.app.Activity
 import android.preference.PreferenceManager
 
-object SongManager {
+object BooksManager {
 
-    private val PREF_NAME = "songbook_pref"
+    private val PREF_SONG_BOOK = "songbook_pref"
+    private val PREF_DAY_BOOK = "daybook_pref"
 
 
     fun createDefaultSongBook () {
@@ -169,7 +170,6 @@ object SongManager {
                 }
             }
         }
-
         return songbookNames
     }
 
@@ -206,25 +206,58 @@ object SongManager {
         }
         if (isRecursive) {
             changingSongs.addAll(getChangingSongs(secondBook, firstBook, false))
-
         }
         return changingSongs
     }
 
     fun getSongBookFromPreferences (activity: Activity): ArrayList<Song>? {
         val preference = PreferenceManager.getDefaultSharedPreferences(activity)
-        val songBookString: String = preference.getString(PREF_NAME, "")
+        val songBookString: String = preference.getString(PREF_SONG_BOOK, "")
         if (songBookString.isEmpty()) return null
         return JsonParser.jsonToSongBook(songBookString)
+    }
+
+    fun getWorshipDayBookFromPreferences (activity: Activity): ArrayList<WorshipDay>? {
+        val preference = PreferenceManager.getDefaultSharedPreferences(activity)
+        val dayBookString: String = preference.getString(PREF_DAY_BOOK, "")
+        if (dayBookString.isEmpty()) return null
+        return JsonParser.jsonToWorshipDayBook(dayBookString)
     }
 
     fun setSongBookToPreferences (activity: Activity): Boolean {
         val songBookString: String = JsonParser.songBookToJson()
         val preference = PreferenceManager.getDefaultSharedPreferences(activity)
         val editor = preference.edit()
-        editor.putString(PREF_NAME, songBookString)
+        editor.putString(PREF_SONG_BOOK, songBookString)
         editor.apply()
         return true
     }
+
+    fun setWorshipDayBookToPreferences (activity: Activity): Boolean {
+        val dayBookString: String = JsonParser.worshipDayBookToJson()
+        val preference = PreferenceManager.getDefaultSharedPreferences(activity)
+        val editor = preference.edit()
+        editor.putString(PREF_DAY_BOOK, dayBookString)
+        editor.apply()
+        return true
+    }
+
+    fun getWorshipDayByDate (date: MyDate): WorshipDay? {
+        for (day: WorshipDay in Books.worshipDayBook) {
+            if (date.isSame(day.date)) return day
+        }
+        return null
+    }
+
+    fun saveWorshipDayToBook (worshipDay: WorshipDay) {
+        for (day: WorshipDay in Books.worshipDayBook) {
+           if (worshipDay.date.isSame(day.date)) {
+               day.updateWorshipDay(worshipDay)
+               return
+           }
+        }
+        Books.worshipDayBook.add(worshipDay)
+    }
+
 
 }

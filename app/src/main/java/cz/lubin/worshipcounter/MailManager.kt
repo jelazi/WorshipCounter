@@ -16,7 +16,6 @@ object MailManager {
     var smtpPassword = ""
     var smtpPort = ""
     lateinit var appExecutors: AppExecutors
-
     var worshipActivity: WorshipActivity? = null
 
 

@@ -95,7 +95,13 @@
                     android:id="@+id/btn_save_day"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Uložit bohoslužbu" />
+                    android:text="Uložit den" />
+
+                <Button
+                    android:id="@+id/btn_confirm_day"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Potvrdit bohoslužbu" />
 
 
             </LinearLayout>

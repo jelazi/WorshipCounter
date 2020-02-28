@@ -12,11 +12,9 @@ import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_song.*
 
-
 class SongActivity : AppCompatActivity() {
 
     var song: Song? = null
-
     var isChangeName = false
     var isChangePage = false
 
@@ -43,8 +41,6 @@ class SongActivity : AppCompatActivity() {
             dates_song.adapter = adapter
 
 
-
-        // get listview height
         var totalHeight = 0
         val adapterCount = adapter.getCount()
         for (size in 0 until adapterCount) {
@@ -52,13 +48,10 @@ class SongActivity : AppCompatActivity() {
             listItem.measure(0, 0)
             totalHeight += listItem.getMeasuredHeight()
         }
-        // Change Height of ListView
         val params = dates_song.getLayoutParams()
         params.height = (totalHeight + (dates_song.getDividerHeight() * (adapterCount)))
         dates_song.setLayoutParams(params)
-
         }
-
     }
 
     fun initListeners () {
@@ -146,7 +139,7 @@ class SongActivity : AppCompatActivity() {
             song?.page = page_song.text.toString().toInt()
         }
         Books.changeSong(song!!)
-        SongManager.setSongBookToPreferences(this@SongActivity)
+        BooksManager.setSongBookToPreferences(this@SongActivity)
         val resultIntent = Intent()
         setResult(Activity.RESULT_OK, resultIntent)
         finish()

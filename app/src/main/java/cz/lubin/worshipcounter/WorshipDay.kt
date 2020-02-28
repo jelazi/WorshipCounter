@@ -1,6 +1,5 @@
 package cz.lubin.worshipcounter
 
-import java.lang.StringBuilder
 
 class WorshipDay (date: MyDate){
     var date = date
@@ -10,6 +9,7 @@ class WorshipDay (date: MyDate){
     private set
     var namesPart: ArrayList<String> = arrayListOf()
     private set
+    var isConfirm: Boolean = false
 
 
     fun addSong (order: Int, song: Song, namePart: String) {
@@ -21,6 +21,16 @@ class WorshipDay (date: MyDate){
 
     fun changeSong (order: Int, song: Song, namePart: String) {
         eraseSong(order)
+        addSong(order, song, namePart)
+    }
+
+    fun updateSong (order: Int, song: Song, namePart: String) {
+        for (ord in orders) {
+            if (ord == order) {
+                changeSong(order, song, namePart)
+                return
+            }
+        }
         addSong(order, song, namePart)
     }
 
@@ -78,6 +88,15 @@ class WorshipDay (date: MyDate){
         }
 
         return message
+    }
+
+    fun updateWorshipDay (anotherWD: WorshipDay) {
+        if (date.isSame(anotherWD.date)) {
+            orders = anotherWD.orders
+            songs = anotherWD.songs
+            namesPart = anotherWD.namesPart
+            isConfirm = anotherWD.isConfirm
+        }
     }
 
 }

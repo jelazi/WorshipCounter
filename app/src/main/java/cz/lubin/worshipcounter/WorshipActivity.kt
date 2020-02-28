@@ -11,6 +11,7 @@ import android.os.Message
 import android.preference.PreferenceManager
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.Toast
@@ -18,23 +19,14 @@ import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_worship.*
 import kotlinx.android.synthetic.main.part_day_item.view.*
 
-
-
 class WorshipActivity : AppCompatActivity() {
 
     var listDaySong: Array <Int> = arrayOf(0,0,0,0,0,0,0,0)
     var listPartDayItem: ArrayList <PartDayItem> = arrayListOf()
-
     private val CHOICE_SONG = 1
-
     var dayList: WorshipDay? = null
-
     var choisePartDay: PartDayItem? = null
-
     var currentDate: MyDate? = null
-
-
-
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,17 +35,19 @@ class WorshipActivity : AppCompatActivity() {
         FtpWorshipClient.setDefaultFtpPreferences(this@WorshipActivity)
         MailManager.setDefaultMailPreferences(this@WorshipActivity)
 
-
         initItems()
         initListeners()
-        resetWorshipDay()
-
-        currentDate = MyDate(DatePresenter.getCurrentDay(), DatePresenter.getCurrentMonth() + 1, DatePresenter.getCurrentYear())
-        dayList = WorshipDay(currentDate!!)
-
         Books.initItems(this@WorshipActivity)
+        currentDate = MyDate(DatePresenter.getCurrentDay(), DatePresenter.getCurrentMonth() + 1, DatePresenter.getCurrentYear())
 
-        val control: TypeDialog = SongManager.controlData()
+        dayList = BooksManager.getWorshipDayByDate(currentDate!!)
+        if (dayList == null) {
+            dayList = WorshipDay(currentDate!!)
+        }
+        BooksManager.saveWorshipDayToBook(dayList!!)
+        redrawDayItems()
+
+        val control: TypeDialog = BooksManager.controlData()
         showMyDialog(control)
     }
 
@@ -85,13 +79,52 @@ class WorshipActivity : AppCompatActivity() {
         label_date.setText(DatePresenter.getCurrentDate())
     }
 
+    fun redrawDayItems () {
+        resetWorshipDay()
+        if (dayList!!.orders.isNullOrEmpty()) return
+        for (i in dayList!!.orders.indices) {
+            if (dayList!!.orders[i]  > listDaySong.size - 1) {
+                addNewPart(dayList!!.namesPart[i])
+            }
+        }
+        for (i in dayList!!.orders.indices) {
+            var song = dayList!!.songs[i]
+            listPartDayItem[dayList!!.orders[i]].song_name_part.text = song.name
+            listPartDayItem[dayList!!.orders[i]].song_page_part.text = song.page.toString()
+        }
+        controlConfirmDay()
+    }
+
+    fun controlConfirmDay() {
+        if (dayList!!.isConfirm) {
+            for (partDayItem in listPartDayItem) {
+                getResources().getColor(R.color.colorBlack)
+                partDayItem.song_name_part.setTextColor(getResources().getColor(R.color.colorGray))
+                partDayItem.song_page_part.setTextColor(getResources().getColor(R.color.colorGray))
+                btn_confirm_day.visibility = View.INVISIBLE
+                btn_save_day.visibility = View.INVISIBLE
+            }
+        } else {
+            for (partDayItem in listPartDayItem) {
+                partDayItem.song_name_part.setTextColor(getResources().getColor(R.color.colorBlack))
+                partDayItem.song_page_part.setTextColor(getResources().getColor(R.color.colorBlack))
+                btn_confirm_day.visibility = View.VISIBLE
+                btn_save_day.visibility = View.VISIBLE
+            }
+        }
+    }
+
     fun initListeners() {
         label_date.setOnClickListener {
             datePicker()
         }
 
         btn_save_day.setOnClickListener {
-            dialogSaveDay()
+            saveDay()
+        }
+
+        btn_confirm_day.setOnClickListener {
+            dialogConfirmDay()
         }
 
         first_before_school.setOnClickListener {
@@ -141,7 +174,7 @@ class WorshipActivity : AppCompatActivity() {
             }
 
             R.id.save_day -> {
-                dialogSaveDay()
+                saveDay()
                 return true
             }
 
@@ -175,8 +208,12 @@ class WorshipActivity : AppCompatActivity() {
     }
 
     fun addNewPartDialog () {
+        if (dayList!!.isConfirm) {
+            Toast.makeText(this@WorshipActivity, "Den je již potvrzený a nejde editovat", Toast.LENGTH_SHORT).show()
+            return
+        }
         val builder = AlertDialog.Builder(this@WorshipActivity)
-        builder.setTitle("Přidání písně")
+        builder.setTitle("Přidání části hraní písně")
         builder.setMessage("Napište popis, kdy píseň byla hraná")
         val input = EditText(this@WorshipActivity)
         val lp = LinearLayout.LayoutParams(
@@ -187,7 +224,7 @@ class WorshipActivity : AppCompatActivity() {
         input.setText("Nový popis")
         builder.setView(input)
 
-        builder.setPositiveButton("ANO"){_, which ->
+        builder.setPositiveButton("Uložit"){_, which ->
             if (input.text.toString().isEmpty()) {
                 showMyDialog(TypeDialog.DESCRIBE_EMPTY)
             } else {
@@ -221,6 +258,10 @@ class WorshipActivity : AppCompatActivity() {
     }
 
     fun choiceSong (partDay: PartDayItem) {
+        if (dayList!!.isConfirm) {
+            Toast.makeText(this@WorshipActivity, "Den je již potvrzený a nejde editovat", Toast.LENGTH_SHORT).show()
+            return
+        }
         val intent = Intent(this, SongBookActivity::class.java)
         intent.putExtra("editable",false.toString())
         choisePartDay = partDay
@@ -234,10 +275,12 @@ class WorshipActivity : AppCompatActivity() {
             currentDate = MyDate(selectedDay, selectedMonth + 1, selectedYear)
             val daylistDate = dayList?.date
             if (dayList != null && daylistDate?.compareTo(currentDate!!) != 0) {
-                dayList = WorshipDay(currentDate!!)
-                resetWorshipDay()
+                dayList = BooksManager.getWorshipDayByDate(currentDate!!)
+                if (dayList == null) {
+                    dayList = WorshipDay(currentDate!!)
+                }
+                redrawDayItems()
             }
-
         }, DatePresenter.getCurrentYear(), DatePresenter.getCurrentMonth(), DatePresenter.getCurrentDay())
         dpd.show()
     }
@@ -270,8 +313,6 @@ class WorshipActivity : AppCompatActivity() {
         second_before_sermon.song_page_part.setText("---")
         third_before_sermon.song_page_part.setText("---")
         fourth_after_sermon.song_page_part.setText("---")
-
-
     }
 
 
@@ -281,11 +322,7 @@ class WorshipActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-
-
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-
         if (requestCode == CHOICE_SONG && resultCode == RESULT_OK) {
             val name = data?.getStringExtra(SongBookActivity.name)
             val ID = data?.getStringExtra(SongBookActivity.ID)?.toInt()
@@ -293,25 +330,23 @@ class WorshipActivity : AppCompatActivity() {
                 val choiceSong: Song? = Books.getSongByID(ID)
                 if (choiceSong != null) {
                     listDaySong[choisePartDay!!.id!! - 1] = choiceSong.id
-
-                    Toast.makeText(this@WorshipActivity, name, Toast.LENGTH_SHORT).show()
-
-                    choisePartDay?.song_name_part?.setText(choiceSong.name)
-                    choisePartDay?.song_page_part?.setText(choiceSong.page.toString())
+                    dayList!!.updateSong(listPartDayItem.indexOf(choisePartDay!!), choiceSong, choisePartDay?.description_part?.text.toString())
+                    redrawDayItems()
+                    Toast.makeText(this@WorshipActivity, "přidána píseň: " + choiceSong.name, Toast.LENGTH_SHORT).show()
                 }
             }
             choisePartDay = null
         }
     }
 
-    fun dialogSaveDay () {
+    fun dialogConfirmDay () {
         val builder = AlertDialog.Builder(this@WorshipActivity)
         builder.setTitle("Uložení písní")
-        builder.setMessage("Je opravdu tento den správně napsán? Chcete data uložit?")
+        builder.setMessage("Je opravdu tento den správně napsán? Chcete data napevno uložit?")
 
 
         builder.setPositiveButton("ANO"){dialog, which ->
-            saveDay()
+            confirmDay()
         }
 
         builder.setNeutralButton("Ne"){_,_ ->
@@ -321,7 +356,10 @@ class WorshipActivity : AppCompatActivity() {
         dialog.show()
     }
 
-    fun saveDay () {
+    fun confirmDay () {
+        dayList!!.isConfirm = true
+        saveDay()
+        controlConfirmDay()
         var index = 0
         listDaySong.forEach {
 
@@ -330,9 +368,18 @@ class WorshipActivity : AppCompatActivity() {
             }
             index ++
         }
+        showMyDialog(BooksManager.saveDaysData(dayList!!))
+        BooksManager.setSongBookToPreferences(this@WorshipActivity)
+    }
 
-        showMyDialog(SongManager.saveDaysData(dayList!!))
-        SongManager.setSongBookToPreferences(this@WorshipActivity)
+    fun saveDay () {
+        if (dayList!!.isConfirm) {
+            Toast.makeText(this@WorshipActivity, "Den je již potvrzený a není nutné ho již ukládat.", Toast.LENGTH_SHORT).show()
+            return
+        }
+        BooksManager.saveWorshipDayToBook(dayList!!)
+        BooksManager.setWorshipDayBookToPreferences(this)
+        Toast.makeText(this@WorshipActivity, "Den je uložený.", Toast.LENGTH_SHORT).show()
     }
 
     fun resetDataDialog () {
@@ -340,9 +387,8 @@ class WorshipActivity : AppCompatActivity() {
         builder.setTitle("Vymazání všech dat")
         builder.setMessage("Opravdu chcete vymazat všechna data?")
 
-
         builder.setPositiveButton("ANO"){dialog, which ->
-            SongManager.resetData(this@WorshipActivity)
+            BooksManager.resetData(this@WorshipActivity)
             resetWorshipDay()
             PreferenceManager.getDefaultSharedPreferences(this).edit().clear().apply()
         }
@@ -355,8 +401,8 @@ class WorshipActivity : AppCompatActivity() {
     }
 
     fun loadTestData () {
-        SongManager.createDefaultSongBook()
-        SongManager.setSongBookToPreferences(this)
+        BooksManager.createDefaultSongBook()
+        BooksManager.setSongBookToPreferences(this)
         Toast.makeText(this@WorshipActivity, "Testovací data jsou načtena.", Toast.LENGTH_SHORT).show()
     }
 
@@ -469,6 +515,5 @@ class WorshipActivity : AppCompatActivity() {
             getBodyMessage(preference)
         )
     }
-
 }
 

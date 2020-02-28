@@ -11,7 +11,6 @@ import java.io.File
 
 object FtpWorshipClient {
 
-
     var address = ""
     var user = ""
     var password = ""
@@ -24,7 +23,9 @@ object FtpWorshipClient {
 
 
     fun uploadSongsLibraryToFtp (context: Context, activity: WorshipActivity) {
-        val file = JsonParser.getSongBookFileJson(context)
+        val songsfile = JsonParser.getSongBookFileJson(context)
+        val daysfile = JsonParser.getDayBookFileJson(context)
+
         worshipActivity = activity
 
 
@@ -32,9 +33,8 @@ object FtpWorshipClient {
             try {
                 connectFtp()
                 removeOldData(context)
-                uploadFileToFtp(file)
-
-
+                uploadFileToFtp(songsfile)
+                uploadFileToFtp(daysfile)
 
                 disconnectFtp()
                 val msg: Message = worshipActivity!!.handler.obtainMessage()

@@ -10,9 +10,13 @@ object Books {
     private set
 
     fun initItems (activity: Activity) {
-        val loadSongBook = SongManager.getSongBookFromPreferences(activity)
+        val loadSongBook = BooksManager.getSongBookFromPreferences(activity)
         if (!loadSongBook.isNullOrEmpty()) {
            songBook = loadSongBook
+        }
+        val loadDayBook = BooksManager.getWorshipDayBookFromPreferences(activity)
+        if (!loadDayBook.isNullOrEmpty()) {
+            worshipDayBook = loadDayBook
         }
         setLastId()
     }
@@ -94,6 +98,7 @@ object Books {
         }
         return null
     }
+
 
     fun getSongIndexByID (id: Int): Int? {
         for (i in songBook.indices) {

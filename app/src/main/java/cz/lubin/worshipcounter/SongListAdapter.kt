@@ -21,8 +21,6 @@ class SongListAdapter(context: Context, arrayList: ArrayList<HashMap<String, Str
         var myview = convertView
         val holder: ViewHolder
 
-
-
         if (convertView == null) {
             val mInflater = (context as Activity).layoutInflater
 
