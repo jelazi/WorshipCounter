@@ -13,6 +13,14 @@ class SettingsActivity : AppCompatPreference()  {
 
         // load settings fragment
         fragmentManager.beginTransaction().replace(android.R.id.content, MainPreferenceFragment()).commit()
+
+        //actionbar
+        val actionbar = supportActionBar
+        //set actionbar title
+        actionbar!!.title = "Nastavení"
+        //set back button
+        actionbar.setDisplayHomeAsUpEnabled(true)
+        actionbar.setDisplayHomeAsUpEnabled(true)
     }
 
     override fun onBackPressed() {
@@ -20,6 +28,8 @@ class SettingsActivity : AppCompatPreference()  {
         FtpWorshipClient.setDefaultFtpPreferences(this)
         MailManager.setDefaultMailPreferences(this)
     }
+
+
 
 
 

@@ -124,7 +124,7 @@ class WorshipActivity : AppCompatActivity() {
         }
 
         btn_confirm_day.setOnClickListener {
-            dialogConfirmDay()
+           showMyDialog(TypeDialog.CONFIRM_DAY)
         }
 
         first_before_school.setOnClickListener {
@@ -184,7 +184,7 @@ class WorshipActivity : AppCompatActivity() {
             }
 
             R.id.factory_reset -> {
-                resetDataDialog()
+                showMyDialog(TypeDialog.RESET_DATA)
                 return true
             }
 
@@ -199,7 +199,7 @@ class WorshipActivity : AppCompatActivity() {
             }
 
             R.id.send_message -> {
-                sendMessage()
+                showMyDialog(TypeDialog.SEND_MESSAGE)
                 return true
             }
 
@@ -339,23 +339,6 @@ class WorshipActivity : AppCompatActivity() {
         }
     }
 
-    fun dialogConfirmDay () {
-        val builder = AlertDialog.Builder(this@WorshipActivity)
-        builder.setTitle("Uložení písní")
-        builder.setMessage("Je opravdu tento den správně napsán? Chcete data napevno uložit?")
-
-
-        builder.setPositiveButton("ANO"){dialog, which ->
-            confirmDay()
-        }
-
-        builder.setNeutralButton("Ne"){_,_ ->
-        }
-
-        val dialog: AlertDialog = builder.create()
-        dialog.show()
-    }
-
     fun confirmDay () {
         dayList!!.isConfirm = true
         saveDay()
@@ -382,23 +365,7 @@ class WorshipActivity : AppCompatActivity() {
         Toast.makeText(this@WorshipActivity, "Den je uložený.", Toast.LENGTH_SHORT).show()
     }
 
-    fun resetDataDialog () {
-        val builder = AlertDialog.Builder(this@WorshipActivity)
-        builder.setTitle("Vymazání všech dat")
-        builder.setMessage("Opravdu chcete vymazat všechna data?")
 
-        builder.setPositiveButton("ANO"){dialog, which ->
-            BooksManager.resetData(this@WorshipActivity)
-            resetWorshipDay()
-            PreferenceManager.getDefaultSharedPreferences(this).edit().clear().apply()
-        }
-
-        builder.setNeutralButton("Ne"){_,_ ->
-        }
-
-        val dialog: AlertDialog = builder.create()
-        dialog.show()
-    }
 
     fun loadTestData () {
         BooksManager.createDefaultSongBook()
@@ -408,12 +375,71 @@ class WorshipActivity : AppCompatActivity() {
 
     fun showMyDialog (typeDialog: TypeDialog) {
         when (typeDialog) {
+            TypeDialog.SEND_MESSAGE -> {
+                val builder = AlertDialog.Builder(this@WorshipActivity)
+                builder.setTitle("Poslání mailu")
+
+                val preference = PreferenceManager.getDefaultSharedPreferences(this)
+                val mailAdress = preference.getString(this.getString(R.string.mail_to_key), this.getString(R.string.mail_to_value))!!
+                builder.setMessage("Chcete poslat mail s písněmi ze dne na adresy: " + mailAdress + "?")
+                builder.setPositiveButton("Ano"){dialog, which ->
+                    sendMessage()
+                }
+
+                builder.setNeutralButton("Ne"){_,_ ->
+                }
+
+                val dialog: AlertDialog = builder.create()
+                dialog.show()
+            }
+
             TypeDialog.EMPTY_DATA -> {
                 val builder = AlertDialog.Builder(this@WorshipActivity)
                 builder.setTitle("Prázdná data")
-                builder.setMessage("V aplikaci nejsou uložena žádná data. Chcete nahrát testovací písně?")
-                builder.setPositiveButton("ANO"){dialog, which ->
+                builder.setMessage("V aplikaci nejsou uložena žádná data.")
+                builder.setPositiveButton("Nahrát testovací data"){dialog, which ->
                     loadTestData()
+                }
+
+                builder.setNegativeButton("Stáhnout výchozí písně") {dialog, which ->
+                    loadDefaultData()
+                }
+
+                builder.setNeutralButton("Nic nenahrát"){_,_ ->
+                }
+
+                val dialog: AlertDialog = builder.create()
+                dialog.show()
+            }
+
+            TypeDialog.RESET_DATA -> {
+                val builder = AlertDialog.Builder(this@WorshipActivity)
+                builder.setTitle("Vymazání všech dat")
+                builder.setMessage("Opravdu chcete vymazat všechna data?")
+
+                builder.setPositiveButton("Ano"){dialog, which ->
+                    BooksManager.resetData(this@WorshipActivity)
+                    resetWorshipDay()
+                    PreferenceManager.getDefaultSharedPreferences(this).edit().clear().apply()
+                    val control: TypeDialog = BooksManager.controlData()
+                    showMyDialog(control)
+                }
+
+                builder.setNeutralButton("Ne"){_,_ ->
+                }
+
+                val dialog: AlertDialog = builder.create()
+                dialog.show()
+            }
+
+            TypeDialog.CONFIRM_DAY -> {
+                val builder = AlertDialog.Builder(this@WorshipActivity)
+                builder.setTitle("Uložení písní")
+                builder.setMessage("Je opravdu tento den správně napsán? Chcete data napevno uložit?")
+
+
+                builder.setPositiveButton("Ano"){dialog, which ->
+                    confirmDay()
                 }
 
                 builder.setNeutralButton("Ne"){_,_ ->
@@ -460,8 +486,12 @@ class WorshipActivity : AppCompatActivity() {
         }
     }
 
+    fun loadDefaultData () {
+        FtpWorshipClient.downloadDefaultData(this, this)
+    }
+
     fun connectFtp () {
-        FtpWorshipClient.uploadSongsLibraryToFtp(this, this)
+        FtpWorshipClient.uploadBooksLibraryToFtp(this, this)
     }
 
     val handler: Handler = object : Handler(Looper.getMainLooper()) {
@@ -471,8 +501,17 @@ class WorshipActivity : AppCompatActivity() {
             val bundle: Bundle = inputMessage.getData()
             val correct = bundle.getString("correct")
             val err = bundle.getString("error")
+            val inputString = bundle.getString("array")
             if (!correct.isNullOrEmpty()) {
                 Toast.makeText(this@WorshipActivity, correct, Toast.LENGTH_LONG).show()
+                if (!inputString.isNullOrEmpty()) {
+                    val array = JsonParser.jsonToSongBook(inputString)
+                    for (song in array) {
+                        Books.addSong(song)
+                    }
+                    Books.sortByLastDate()
+                    BooksManager.setSongBookToPreferences(this@WorshipActivity)
+                }
             }
             if (!err.isNullOrEmpty()) {
                 Toast.makeText(this@WorshipActivity, err, Toast.LENGTH_LONG).show()

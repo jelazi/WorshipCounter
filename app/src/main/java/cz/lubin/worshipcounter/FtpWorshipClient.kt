@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.os.Message
 import android.preference.PreferenceManager
 import it.sauronsoftware.ftp4j.FTPClient
+import java.io.BufferedReader
 import java.io.File
 
 object FtpWorshipClient {
@@ -16,13 +17,14 @@ object FtpWorshipClient {
     var password = ""
     var directoryToday = ""
     var directoryBackup = ""
+    var directoryDefault = "/default/"
 
     var worshipActivity: WorshipActivity? = null
 
     val mFtpClient = FTPClient()
 
 
-    fun uploadSongsLibraryToFtp (context: Context, activity: WorshipActivity) {
+    fun uploadBooksLibraryToFtp (context: Context, activity: WorshipActivity) {
         val songsfile = JsonParser.getSongBookFileJson(context)
         val daysfile = JsonParser.getDayBookFileJson(context)
 
@@ -31,7 +33,7 @@ object FtpWorshipClient {
 
         Thread {
             try {
-                connectFtp()
+                connectFtp(directoryToday)
                 removeOldData(context)
                 uploadFileToFtp(songsfile)
                 uploadFileToFtp(daysfile)
@@ -54,6 +56,44 @@ object FtpWorshipClient {
             }
 
         }.start()
+    }
+
+    fun downloadDefaultData(context: Context, activity: WorshipActivity):ArrayList<Song>? {
+        worshipActivity = activity
+        var file: File? = null
+        var array: ArrayList<Song>? = null
+
+        Thread {
+            try {
+                connectFtp(directoryDefault)
+
+                file = downloadFileFromFtp("defaultSong.json")
+                disconnectFtp()
+                val bufferedReader: BufferedReader = file!!.bufferedReader()
+                val inputString = bufferedReader.use { it.readText() }
+
+                val msg: Message = worshipActivity!!.handler.obtainMessage()
+                val bundle = Bundle()
+                bundle.putString("correct", "Nahrání dat z FTP serveru proběhlo v pořádku")
+                bundle.putString("array", inputString)
+                msg.data = bundle
+                worshipActivity!!.handler.sendMessage(msg)
+
+
+            } catch (e: Exception) {
+                e.printStackTrace()
+                val msg: Message = worshipActivity!!.handler.obtainMessage()
+                val bundle = Bundle()
+                bundle.putString("error", "Nějaká chyba s nahráváním dat: " + e.toString())
+                msg.data = bundle
+                worshipActivity!!.handler.sendMessage(msg)
+
+            }
+
+        }.start()
+
+           return array
+
     }
 
     private fun removeOldData (context: Context) {
@@ -80,12 +120,12 @@ object FtpWorshipClient {
     }
 
 
-    private fun connectFtp () {
+    private fun connectFtp (directory: String) {
         mFtpClient.connect(address)
 
         mFtpClient.login(user, password)
         mFtpClient.type = FTPClient.TYPE_BINARY
-        mFtpClient.changeDirectory(directoryToday)
+        mFtpClient.changeDirectory(directory)
     }
 
     private fun disconnectFtp () {
@@ -96,10 +136,20 @@ object FtpWorshipClient {
         mFtpClient.changeDirectory(directoryToday)
         if (mFtpClient.isConnected) {
             mFtpClient.upload(file)
-            var list = mFtpClient.list()
-
+            //var list = mFtpClient.list()
         }
     }
+
+    private fun downloadFileFromFtp (nameFile: String):File? {
+        val path = worshipActivity!!.getFilesDir()
+        var file = File(path, nameFile)
+        mFtpClient.changeDirectory(directoryDefault)
+        if (mFtpClient.isConnected) {
+            mFtpClient.download(nameFile, file )
+        }
+        return file
+    }
+
 
     @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
     fun setDefaultFtpPreferences (activity: Activity) {

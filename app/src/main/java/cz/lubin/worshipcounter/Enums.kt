@@ -13,5 +13,8 @@ enum class TypeDialog {
     LIST_EMPTY,
     DATE_USED,
     ALL_DATE_USED,
-    DESCRIBE_EMPTY
+    DESCRIBE_EMPTY,
+    RESET_DATA,
+    CONFIRM_DAY,
+    SEND_MESSAGE
 }

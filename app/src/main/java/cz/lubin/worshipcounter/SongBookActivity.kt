@@ -32,6 +32,14 @@ class SongBookActivity : AppCompatActivity() {
 
         val searchView = findViewById(R.id.searchView) as SearchView
 
+        //actionbar
+        val actionbar = supportActionBar
+        //set actionbar title
+        actionbar!!.title = "Výběr písně"
+        //set back button
+        actionbar.setDisplayHomeAsUpEnabled(true)
+        actionbar.setDisplayHomeAsUpEnabled(true)
+
         editable = intent.getStringExtra("editable")
         listview = findViewById(R.id.mListView) as ListView
 
@@ -92,6 +100,11 @@ class SongBookActivity : AppCompatActivity() {
             songListadapter = SongListAdapter(this, info)
             listview?.setAdapter(songListadapter)
         }
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
     }
 
 

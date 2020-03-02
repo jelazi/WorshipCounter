@@ -51,7 +51,7 @@
     <item
         android:id="@+id/send_message"
         android:orderInCategory="100"
-        android:title="Poslat..."/>
+        android:title="Poslat mail"/>
 
 
 </menu>
