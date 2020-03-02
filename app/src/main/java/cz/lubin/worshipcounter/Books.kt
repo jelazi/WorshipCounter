@@ -44,6 +44,12 @@ object Books {
         if (songBook[index].page != song.page) {
             songBook[index].page = song.page
         }
+        if (songBook[index!!].book.compareTo(song.book) != 0) {
+            songBook[index].book = song.book
+        }
+        if (songBook[index!!].presentation.compareTo(song.presentation) != 0) {
+            songBook[index].presentation = song.presentation
+        }
     }
 
 
@@ -85,7 +91,8 @@ object Books {
     }
 
     fun sortByLastDate () {
-        val sortedList = songBook.sortedWith(compareBy {  it.getLastDate()})
+        val firstSortedList = songBook.sortedWith ( compareBy {it.name} )
+        val sortedList = firstSortedList.sortedWith(compareBy {  it.getLastDate()})
         songBook = arrayListOf()
         sortedList.forEach {
             songBook.add(it)

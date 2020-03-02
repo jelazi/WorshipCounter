@@ -322,6 +322,7 @@ class WorshipActivity : AppCompatActivity() {
 
 
     fun openSongBookPreview () {
+        Books.sortByLastDate()
         val intent = Intent(this, SongBookActivity::class.java)
         intent.putExtra("editable",true.toString())
         startActivity(intent)

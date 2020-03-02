@@ -20,7 +20,7 @@ class SongBookActivity : AppCompatActivity() {
 
     var editable: String? = null
     var songListadapter: SongListAdapter? = null
-    val info = ArrayList<HashMap<String, String>>()
+    var info = ArrayList<HashMap<String, String>>()
     var isChangeSongBook: Boolean = false
     var listview: ListView? = null
     private val EDIT_SONG = 1
@@ -43,21 +43,7 @@ class SongBookActivity : AppCompatActivity() {
         editable = intent.getStringExtra("editable")
         listview = findViewById(R.id.mListView) as ListView
 
-        var hashMap: HashMap<String, String> = HashMap<String, String>()
-
-        for (i in 0..Books.songBook.size - 1) {
-            hashMap = HashMap()
-            hashMap.put("name", Books.songBook[i].name)
-            if (Books.songBook[i].getLastDate() == null) {
-                hashMap.put("lastDate", "---")
-
-            } else {
-                hashMap.put("lastDate", Books.songBook[i].getLastDate().toString())
-
-            }
-            hashMap.put("page", Books.songBook[i].page.toString())
-            info.add(hashMap)
-        }
+        createHashMap()
 
        songListadapter = SongListAdapter(this, info)
         listview?.adapter = (songListadapter)
@@ -89,6 +75,15 @@ class SongBookActivity : AppCompatActivity() {
                 }
             }
         })
+
+        listview?.setOnItemLongClickListener(object : AdapterView.OnItemLongClickListener {
+            override fun onItemLongClick(adapterView: AdapterView<*>, view: View, i: Int, l: Long): Boolean {
+                val name = info[i].get("name").toString()
+                openWebPage(name)
+
+                return true
+            }
+        })
     }
 
     override fun onResume() {
@@ -97,8 +92,39 @@ class SongBookActivity : AppCompatActivity() {
 
         if (isChangeSongBook) {
             isChangeSongBook = false
+            createHashMap()
             songListadapter = SongListAdapter(this, info)
             listview?.setAdapter(songListadapter)
+        }
+    }
+
+    fun openWebPage(name:String) {
+        var choiceSong = Books.getSongByName(name)
+        var webPage = "google.com"
+        if (!choiceSong?.presentation.isNullOrEmpty()) {
+            webPage = choiceSong?.presentation!!
+        }
+        val intent = Intent(this, WebActivity::class.java)
+        intent.putExtra("webPage", webPage)
+        startActivity(intent)
+    }
+
+    private fun createHashMap () {
+        var hashMap: HashMap<String, String> = HashMap<String, String>()
+        info = ArrayList<HashMap<String, String>>()
+
+        for (i in 0..Books.songBook.size - 1) {
+            hashMap = HashMap()
+            hashMap.put("name", Books.songBook[i].name)
+            if (Books.songBook[i].getLastDate() == null) {
+                hashMap.put("lastDate", "---")
+
+            } else {
+                hashMap.put("lastDate", Books.songBook[i].getLastDate().toString())
+
+            }
+            hashMap.put("page", Books.songBook[i].page.toString())
+            info.add(hashMap)
         }
     }
 
@@ -143,15 +169,21 @@ class SongBookActivity : AppCompatActivity() {
         val mainLayout = LinearLayout(this@SongBookActivity)
         val nameLayout = LinearLayout(this@SongBookActivity)
         val pageLayout = LinearLayout(this@SongBookActivity)
+        val bookLayout = LinearLayout(this@SongBookActivity)
+
         val descNameSong = TextView (this@SongBookActivity)
         val descPageSong = TextView (this@SongBookActivity)
+        val descBook = TextView (this@SongBookActivity)
+        val spinnerBook = Spinner (this@SongBookActivity)
 
         descNameSong.text = "Jméno"
-        descPageSong.text = "stránka"
+        descPageSong.text = "Stránka"
+        descBook.text = "Zpěvník"
 
         mainLayout.orientation = LinearLayout.VERTICAL
         pageLayout.orientation = LinearLayout.HORIZONTAL
         nameLayout.orientation = LinearLayout.HORIZONTAL
+        bookLayout.orientation = LinearLayout.HORIZONTAL
         editNameSong.setText("Nová píseň")
         editNameSong.setSelectAllOnFocus(true)
         builder.setView(editNameSong)
@@ -159,14 +191,29 @@ class SongBookActivity : AppCompatActivity() {
         editPageSong.setSelectAllOnFocus(true)
         editPageSong.inputType = InputType.TYPE_CLASS_NUMBER
 
+
+        if (spinnerBook != null) {
+            val array = arrayOf("Bílý kostel", "Chci oslavovat", "Sionský")
+            val adapter = ArrayAdapter(
+                this,
+                android.R.layout.simple_spinner_item, array
+            )
+            spinnerBook.adapter = adapter
+        }
+
         nameLayout.addView(descNameSong)
         nameLayout.addView(editNameSong)
         pageLayout.addView(descPageSong)
         pageLayout.addView(editPageSong)
+        bookLayout.addView(descBook)
+        bookLayout.addView(spinnerBook)
 
         mainLayout.addView(nameLayout)
         mainLayout.addView(pageLayout)
+        mainLayout.addView(bookLayout)
         builder.setView(mainLayout)
+
+
 
         builder.setPositiveButton("Uložit"){dialog, which ->
             if (editNameSong.text.toString().isEmpty()) {

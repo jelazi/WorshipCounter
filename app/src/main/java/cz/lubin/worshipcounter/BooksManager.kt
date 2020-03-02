@@ -98,6 +98,16 @@ object BooksManager {
         return TypeDialog.NO_DIALOG
     }
 
+    fun getArrayOneBook (nameBook: String):ArrayList<Song> {
+        var array = arrayListOf<Song>()
+        for (song in Books.songBook) {
+            if (song.book.compareTo(nameBook) == 0) {
+                array.add(song)
+            }
+        }
+        return array
+    }
+
 
     fun getSongbookItems (nameItems: String): Array<String> {
         var songbookNames: Array<String> = arrayOf()

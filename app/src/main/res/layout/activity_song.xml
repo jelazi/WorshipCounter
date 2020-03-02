@@ -32,8 +32,23 @@
             android:textSize="40sp"
             android:text="Page of Song" />
 
+        <TextView
+            android:id="@+id/presentation_song"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:textSize="20sp"
+            android:text="" />
+
+
+
         <ListView
             android:id="@+id/dates_song"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <Spinner
+            android:id="@+id/books_type"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 

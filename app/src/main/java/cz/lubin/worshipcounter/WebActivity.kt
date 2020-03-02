@@ -8,18 +8,13 @@ import android.webkit.WebViewClient
 class WebActivity : AppCompatActivity() {
 
     private lateinit var webView: WebView
+    private var webPage = "http://google.com"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_web)
 
-        //actionbar
-        val actionbar = supportActionBar
-        //set actionbar title
-        actionbar!!.title = "Úprava písně"
-        //set back button
-        actionbar.setDisplayHomeAsUpEnabled(true)
-        actionbar.setDisplayHomeAsUpEnabled(true)
+
 
         webView = findViewById(R.id.webview)
         webView.webViewClient = object : WebViewClient() {
@@ -28,7 +23,21 @@ class WebActivity : AppCompatActivity() {
                 return true
             }
         }
-        webView.loadUrl("http://zizkovi.tode.cz/")
+        webPage = intent.extras.get("webPage").toString()
+        if (!webPage.startsWith("http://")) {
+            webPage = "http://" + webPage
+        }
+
+        //actionbar
+        val actionbar = supportActionBar
+        //set actionbar title
+        actionbar!!.title = webPage
+
+        //set back button
+        actionbar.setDisplayHomeAsUpEnabled(true)
+        actionbar.setDisplayHomeAsUpEnabled(true)
+
+        webView.loadUrl(webPage)
     }
 
     override fun onSupportNavigateUp(): Boolean {
