@@ -23,6 +23,9 @@ object JsonParser {
         val gson = Gson()
         val itemType = object : TypeToken<ArrayList<Song>>() {}.type
         val jsonObject = gson.fromJson<ArrayList<Song>>(json, itemType)
+        for (song in jsonObject) {
+            song.controlCorrect()
+        }
         return jsonObject
     }
 

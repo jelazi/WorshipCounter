@@ -17,7 +17,7 @@ object FtpWorshipClient {
     var password = ""
     var directoryToday = ""
     var directoryBackup = ""
-    var directoryDefault = "/default/"
+    var directoryDefault = ""
 
     var worshipActivity: WorshipActivity? = null
 
@@ -160,6 +160,7 @@ object FtpWorshipClient {
         password = preference.getString(activity.getString(R.string.ftp_password_key), activity.getString(R.string.ftp_password_value))
         directoryToday = preference.getString(activity.getString(R.string.ftp_directory_today_key), activity.getString(R.string.ftp_directory_today_value))
         directoryBackup = preference.getString(activity.getString(R.string.ftp_directory_backup_key), activity.getString(R.string.ftp_directory_backup_value))
+        directoryDefault = preference.getString(activity.getString(R.string.ftp_directory_default_key), activity.getString(R.string.ftp_directory_default_value))
 
     }
 }

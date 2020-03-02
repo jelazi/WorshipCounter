@@ -203,6 +203,11 @@ class WorshipActivity : AppCompatActivity() {
                 return true
             }
 
+            R.id.test_web -> {
+                testWeb()
+                return true
+            }
+
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -522,6 +527,10 @@ class WorshipActivity : AppCompatActivity() {
     fun openSettings () {
         startActivity(Intent(this@WorshipActivity, SettingsActivity::class.java))
 
+    }
+
+    fun testWeb () {
+        startActivity(Intent(this@WorshipActivity, WebActivity::class.java))
     }
 
     fun getBodyMessage (preference: SharedPreferences): String {

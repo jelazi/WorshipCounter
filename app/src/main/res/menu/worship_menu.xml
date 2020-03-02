@@ -53,6 +53,11 @@
         android:orderInCategory="100"
         android:title="Poslat mail"/>
 
+    <item
+        android:id="@+id/test_web"
+        android:orderInCategory="100"
+        android:title="Otevřít web"/>
+
 
 </menu>
 

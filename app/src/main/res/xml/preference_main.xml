@@ -33,6 +33,12 @@
         android:summary="@string/ftp_directory_backup_value"
         android:title="@string/ftp_directory_backup_title" />
 
+    <EditTextPreference
+        android:defaultValue="@string/ftp_directory_default_value"
+        android:key="@string/ftp_directory_default_key"
+        android:summary="@string/ftp_directory_default_value"
+        android:title="@string/ftp_directory_default_title" />
+
 
 </PreferenceCategory>
 
