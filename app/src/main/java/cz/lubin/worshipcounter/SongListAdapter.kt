@@ -30,6 +30,7 @@ class SongListAdapter(context: Context, arrayList: ArrayList<HashMap<String, Str
             holder.pageHeader = myview!!.findViewById<TextView>(R.id.page) as TextView
             holder.title = myview!!.findViewById<TextView>(R.id.title) as TextView
             holder.lastDate = myview!!.findViewById<TextView>(R.id.last_date) as TextView
+            holder.songBook = myview!!.findViewById(R.id.song_book) as TextView
 
             myview.setTag(holder)
         } else {
@@ -41,6 +42,7 @@ class SongListAdapter(context: Context, arrayList: ArrayList<HashMap<String, Str
         holder.pageHeader!!.setText(map.get("page"))
         holder.title!!.setText(map.get("name"))
         holder.lastDate!!.setText(map.get("lastDate"))
+        holder.songBook!!.setText(map.get("songBook"))
 
         return myview
     }
@@ -62,6 +64,7 @@ class SongListAdapter(context: Context, arrayList: ArrayList<HashMap<String, Str
         var pageHeader: TextView? = null
         var title: TextView? = null
         var lastDate: TextView? = null
+        var songBook: TextView? = null
     }
 
     fun filter(text: String?) {

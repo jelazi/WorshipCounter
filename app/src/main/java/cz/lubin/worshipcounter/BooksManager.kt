@@ -7,6 +7,7 @@ object BooksManager {
 
     private val PREF_SONG_BOOK = "songbook_pref"
     private val PREF_DAY_BOOK = "daybook_pref"
+    private val PREF_BOOK_NAME = "bookname_pref"
 
 
     fun createDefaultSongBook () {
@@ -73,6 +74,7 @@ object BooksManager {
     fun resetData (activity: Activity) {
         Books.songBook = arrayListOf()
         Books.worshipDayBook = arrayListOf()
+        Books.countSongID = 0
         setSongBookToPreferences(activity)
     }
 
@@ -101,7 +103,7 @@ object BooksManager {
     fun getArrayOneBook (nameBook: String):ArrayList<Song> {
         var array = arrayListOf<Song>()
         for (song in Books.songBook) {
-            if (song.book.compareTo(nameBook) == 0) {
+            if (song.book.equals(nameBook)) {
                 array.add(song)
             }
         }
@@ -233,6 +235,7 @@ object BooksManager {
         if (dayBookString.isEmpty()) return null
         return JsonParser.jsonToWorshipDayBook(dayBookString)
     }
+
 
     fun setSongBookToPreferences (activity: Activity): Boolean {
         val songBookString: String = JsonParser.songBookToJson()

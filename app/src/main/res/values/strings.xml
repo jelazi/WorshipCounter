@@ -55,7 +55,7 @@
     <string name="mail_from_key">mail_from</string>
 
 
-    <string name="mail_to_value">lzizka@gmail.com, jelazizkovi@gmail.com</string>
+    <string name="mail_to_value">lzizka@gmail.com</string>
     <string name="mail_to_title">Emailové adresy příjemců</string>
     <string name="mail_to_key">mail_to</string>
 
@@ -68,6 +68,11 @@
     <string name="mail_message_value">Zde jsou návrhy na písně: </string>
     <string name="mail_message_title">Obsah zprávy</string>
     <string name="mail_message_key">mail_message</string>
+
+
+    <string name="book_name_value">Bílý kostel,Chci oslavovat,Sionský</string>
+    <string name="book_name_title">Jména zpěvníků</string>
+    <string name="book_name_key">book_name</string>
 
 
 </resources>

@@ -11,7 +11,6 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import kotlinx.android.synthetic.main.activity_song_book.*
 import java.io.Serializable
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
@@ -101,8 +100,8 @@ class SongBookActivity : AppCompatActivity() {
     fun openWebPage(name:String) {
         var choiceSong = Books.getSongByName(name)
         var webPage = "google.com"
-        if (!choiceSong?.presentation.isNullOrEmpty()) {
-            webPage = choiceSong?.presentation!!
+        if (!choiceSong?.webPage.isNullOrEmpty()) {
+            webPage = choiceSong?.webPage!!
         }
         val intent = Intent(this, WebActivity::class.java)
         intent.putExtra("webPage", webPage)
@@ -112,6 +111,7 @@ class SongBookActivity : AppCompatActivity() {
     private fun createHashMap () {
         var hashMap: HashMap<String, String> = HashMap<String, String>()
         info = ArrayList<HashMap<String, String>>()
+        Books.sortByLastDate()
 
         for (i in 0..Books.songBook.size - 1) {
             hashMap = HashMap()
@@ -124,6 +124,8 @@ class SongBookActivity : AppCompatActivity() {
 
             }
             hashMap.put("page", Books.songBook[i].page.toString())
+            hashMap.put("songBook", Books.songBook[i].book)
+            hashMap.put("webPage", Books.songBook[i].webPage)
             info.add(hashMap)
         }
     }
@@ -193,7 +195,7 @@ class SongBookActivity : AppCompatActivity() {
 
 
         if (spinnerBook != null) {
-            val array = arrayOf("Bílý kostel", "Chci oslavovat", "Sionský")
+            val array = Books.booksName
             val adapter = ArrayAdapter(
                 this,
                 android.R.layout.simple_spinner_item, array
@@ -221,7 +223,7 @@ class SongBookActivity : AppCompatActivity() {
             } else if (editNameSong.text.toString().isEmpty()) {
                 Toast.makeText(this@SongBookActivity, "Stránka nesmí zůstat prázdná...", Toast.LENGTH_SHORT).show()
             } else {
-                addNewSong(editNameSong.text.toString(), editPageSong.text.toString().toInt())
+                addNewSong(editNameSong.text.toString(), editPageSong.text.toString().toInt(), spinnerBook.selectedItem.toString())
             }
         }
 
@@ -233,8 +235,9 @@ class SongBookActivity : AppCompatActivity() {
         dialog.window!!.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE)
     }
 
-    fun addNewSong (name: String, page: Int) {
+    fun addNewSong (name: String, page: Int, book: String) {
         val song = Song(name, page)
+        song.book = book
         val typeDialog = Books.addSong(song)
         BooksManager.setSongBookToPreferences(this@SongBookActivity)
         showMyDialog(typeDialog)
@@ -254,6 +257,7 @@ class SongBookActivity : AppCompatActivity() {
             }
             TypeDialog.SONG_CREATE -> {
                 Toast.makeText(this@SongBookActivity, "Píseň je vytvořena", Toast.LENGTH_SHORT).show()
+                isChangeSongBook = true
             }
             else -> {
                 Toast.makeText(this@SongBookActivity, "Nějaká jiná chyba", Toast.LENGTH_SHORT).show()

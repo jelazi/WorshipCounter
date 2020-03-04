@@ -98,5 +98,11 @@
 
     </PreferenceCategory>
 
+    <EditTextPreference
+        android:defaultValue="@string/book_name_value"
+        android:key="@string/book_name_key"
+        android:summary="@string/book_name_value"
+        android:title="@string/book_name_title" />
+
 
 </PreferenceScreen>

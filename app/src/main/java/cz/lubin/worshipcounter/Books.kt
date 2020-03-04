@@ -1,13 +1,14 @@
 package cz.lubin.worshipcounter
 
 import android.app.Activity
+import android.preference.PreferenceManager
 
 object Books {
 
     var songBook: ArrayList<Song> = arrayListOf()
     var worshipDayBook: ArrayList<WorshipDay> = arrayListOf()
+    var booksName: ArrayList<String> = arrayListOf()
     var countSongID: Int = 0
-    private set
 
     fun initItems (activity: Activity) {
         val loadSongBook = BooksManager.getSongBookFromPreferences(activity)
@@ -18,6 +19,12 @@ object Books {
         if (!loadDayBook.isNullOrEmpty()) {
             worshipDayBook = loadDayBook
         }
+
+        val preference = PreferenceManager.getDefaultSharedPreferences(activity)
+
+        val loadBooksName:String = preference.getString(activity.getString(R.string.book_name_key), activity.getString(R.string.book_name_value))!!
+        booksName = ArrayList(loadBooksName.split(","))
+
         setLastId()
     }
 
@@ -26,7 +33,8 @@ object Books {
         if (isSameName(song)) {
             return TypeDialog.IS_SAME_SONG
         }
-        if (isSamePage(song)) {
+        val array = BooksManager.getArrayOneBook(song.book)
+        if (isSamePage(song, array)) {
             return TypeDialog.IS_SAME_PAGE
         }
 
@@ -47,8 +55,8 @@ object Books {
         if (songBook[index!!].book.compareTo(song.book) != 0) {
             songBook[index].book = song.book
         }
-        if (songBook[index!!].presentation.compareTo(song.presentation) != 0) {
-            songBook[index].presentation = song.presentation
+        if (songBook[index!!].webPage.compareTo(song.webPage) != 0) {
+            songBook[index].webPage = song.webPage
         }
     }
 
@@ -72,7 +80,7 @@ object Books {
         countSongID = lastId + 1
     }
 
-    private fun isSameName (song: Song): Boolean {
+    fun isSameName (song: Song): Boolean {
         songBook.forEach {
             if (it.name.compareTo(song.name, true) == 0) {
                 return true
@@ -81,9 +89,27 @@ object Books {
         return false
     }
 
-    private fun isSamePage (song: Song): Boolean {
+    fun isSameName (name: String): Boolean {
         songBook.forEach {
+            if (it.name.compareTo(name, true) == 0) {
+                return true
+            }
+        }
+        return false
+    }
+
+    fun isSamePage (song: Song, array:ArrayList<Song>): Boolean {
+        array.forEach {
             if (it.page == song.page) {
+                return true
+            }
+        }
+        return false
+    }
+
+    fun isSamePage (page: Int, array:ArrayList<Song>):Boolean {
+        for (song in array) {
+            if (song.page == page) {
                 return true
             }
         }

@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:orientation="horizontal"
     android:layout_height="60sp"
-    android:weightSum="10"
+    android:weightSum="14"
     android:gravity="center_vertical">
 
 
@@ -20,17 +20,32 @@
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp" />
 
-            <TextView
-                android:id="@+id/title"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:scrollHorizontally="false"
-                android:layout_weight="4"
-                android:gravity="start"
-                android:textColor="@color/colorBlack"
-                android:text="title"
-                android:textStyle="bold" />
-        <View
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="7"
+        android:gravity="start"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:scrollHorizontally="false"
+            android:text="title"
+            android:textColor="@color/colorBlack"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/song_book"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorBlack"
+            android:textSize="10sp"
+            android:text="Bílý kostel" />
+    </LinearLayout>
+
+    <View
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_weight="1"
@@ -41,7 +56,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="last_date"
-                android:layout_weight="3"
+                android:layout_weight="4"
                 android:textColor="@color/colorBlack"
                 android:gravity="end"
                 android:layout_marginLeft="5dp"

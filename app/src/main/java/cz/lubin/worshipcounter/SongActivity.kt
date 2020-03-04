@@ -19,7 +19,7 @@ class SongActivity : AppCompatActivity() {
     var isChangePage = false
     var isChangePres = false
     var book:String? = null
-    val array = arrayOf("Bílý kostel", "Chci oslavovat", "Sionský")
+    val array = Books.booksName
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,8 +68,11 @@ class SongActivity : AppCompatActivity() {
         dates_song.setLayoutParams(params)
         }
 
-        if (!song?.presentation.isNullOrEmpty()) {
-            presentation_song.text = song?.presentation
+        if (!song?.webPage.isNullOrEmpty()) {
+            presentation_song.text = song?.webPage
+        } else {
+            presentation_song.text = "---"
+
         }
 
 
@@ -120,8 +123,15 @@ class SongActivity : AppCompatActivity() {
         builder.setView(input)
 
         builder.setPositiveButton("ANO"){dialog, which ->
-            name_song.setText(input.text)
-            isChangeName = true
+            val newName = input.text.toString()
+            if (song!!.name.equals(newName)) {
+                if (!Books.isSameName(newName)) {
+                    name_song.setText(input.text)
+                    isChangeName = true
+                } else {
+                    Toast.makeText(this@SongActivity, "Jméno se již používá v jiné písni.", Toast.LENGTH_SHORT).show()
+                }
+            }
         }
 
         builder.setNeutralButton("Zrušit"){_,_ ->
@@ -147,8 +157,17 @@ class SongActivity : AppCompatActivity() {
         builder.setView(input)
 
         builder.setPositiveButton("ANO"){dialog, which ->
-            page_song.setText(input.text)
-            isChangePage = true
+            val newPage = input.text.toString().toInt()
+            if (song?.page != newPage) {
+                val array = BooksManager.getArrayOneBook(song!!.book)
+                if (!Books.isSamePage(newPage, array)) {
+                    page_song.setText(input.text)
+                    isChangePage = true
+                } else {
+                    Toast.makeText(this@SongActivity, "Stránka se již používá v jiné písni.", Toast.LENGTH_SHORT).show()
+                }
+            }
+
         }
 
 
@@ -174,8 +193,10 @@ class SongActivity : AppCompatActivity() {
         builder.setView(input)
 
         builder.setPositiveButton("ANO"){dialog, which ->
-            presentation_song.setText(input.text)
-            isChangePres = true
+            if (!input.text.equals("---")) {
+                presentation_song.setText(input.text)
+                isChangePres = true
+            }
         }
 
         builder.setNeutralButton("Zrušit"){_,_ ->
@@ -205,7 +226,7 @@ class SongActivity : AppCompatActivity() {
         }
 
         if (isChangePres) {
-            song?.presentation = presentation_song.text.toString()
+            song?.webPage = presentation_song.text.toString()
         }
 
         song?.book = books_type.selectedItem.toString()

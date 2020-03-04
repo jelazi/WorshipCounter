@@ -4,20 +4,25 @@ import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.content.Intent
 import android.content.SharedPreferences
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.os.Message
 import android.preference.PreferenceManager
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_worship.*
 import kotlinx.android.synthetic.main.part_day_item.view.*
+import java.io.File
+import java.io.OutputStream
 
 class WorshipActivity : AppCompatActivity() {
 
@@ -27,6 +32,7 @@ class WorshipActivity : AppCompatActivity() {
     var dayList: WorshipDay? = null
     var choisePartDay: PartDayItem? = null
     var currentDate: MyDate? = null
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -180,6 +186,14 @@ class WorshipActivity : AppCompatActivity() {
 
             R.id.load_test_data -> {
                 loadTestData()
+                return true
+            }
+
+            R.id.load_current_data -> {
+                BooksManager.resetData(this@WorshipActivity)
+                resetWorshipDay()
+                PreferenceManager.getDefaultSharedPreferences(this).edit().clear().apply()
+                loadCurrentData()
                 return true
             }
 
@@ -400,21 +414,48 @@ class WorshipActivity : AppCompatActivity() {
             }
 
             TypeDialog.EMPTY_DATA -> {
+
                 val builder = AlertDialog.Builder(this@WorshipActivity)
+                var dialog: AlertDialog? = null
                 builder.setTitle("Prázdná data")
                 builder.setMessage("V aplikaci nejsou uložena žádná data.")
-                builder.setPositiveButton("Nahrát testovací data"){dialog, which ->
+
+                val layout = LinearLayout(this)
+                layout.orientation = LinearLayout.VERTICAL
+
+                val testDataBtn = Button(this)
+                testDataBtn.setText("Nahrát testovací data")
+                testDataBtn.setOnClickListener(View.OnClickListener {
                     loadTestData()
-                }
+                    dialog?.dismiss()
+                })
+                layout.addView(testDataBtn)
 
-                builder.setNegativeButton("Stáhnout výchozí písně") {dialog, which ->
+                val currentDataBtn = Button(this)
+                currentDataBtn.setText("Stáhnout momentální data")
+                currentDataBtn.setOnClickListener(View.OnClickListener {
+                    loadCurrentData()
+                    dialog?.dismiss()
+                })
+                layout.addView(currentDataBtn)
+
+                val defaultDataBtn = Button(this)
+                defaultDataBtn.setText("Stáhnout výchozí písně")
+                defaultDataBtn.setOnClickListener(View.OnClickListener {
                     loadDefaultData()
-                }
+                    dialog?.dismiss()
+                })
+                layout.addView(defaultDataBtn)
 
-                builder.setNeutralButton("Nic nenahrát"){_,_ ->
-                }
+                val cancelBtn = Button(this)
+                cancelBtn.setText("Nic nenahrát")
+                cancelBtn.setOnClickListener(View.OnClickListener {
+                    dialog?.dismiss()
+                })
+                layout.addView(cancelBtn)
 
-                val dialog: AlertDialog = builder.create()
+                builder.setView(layout)
+                dialog = builder.create()
                 dialog.show()
             }
 
@@ -496,6 +537,10 @@ class WorshipActivity : AppCompatActivity() {
         FtpWorshipClient.downloadDefaultData(this, this)
     }
 
+    fun loadCurrentData () {
+        FtpWorshipClient.downloadCurrentData(this, this)
+    }
+
     fun connectFtp () {
         FtpWorshipClient.uploadBooksLibraryToFtp(this, this)
     }
@@ -505,12 +550,13 @@ class WorshipActivity : AppCompatActivity() {
         override fun handleMessage(inputMessage: Message) {
             // Gets the image task from the incoming Message object.
             val bundle: Bundle = inputMessage.getData()
-            val correct = bundle.getString("correct")
             val err = bundle.getString("error")
             val inputString = bundle.getString("array")
-            if (!correct.isNullOrEmpty()) {
-                Toast.makeText(this@WorshipActivity, correct, Toast.LENGTH_LONG).show()
+          //  Log.d("TAG", inputString)
+            if (!inputString.isNullOrEmpty()) {
+                Toast.makeText(this@WorshipActivity, "Přenos dat proběhl v pořádku.", Toast.LENGTH_LONG).show()
                 if (!inputString.isNullOrEmpty()) {
+
                     val array = JsonParser.jsonToSongBook(inputString)
                     for (song in array) {
                         Books.addSong(song)
@@ -531,7 +577,10 @@ class WorshipActivity : AppCompatActivity() {
     }
 
     fun testWeb () {
-        startActivity(Intent(this@WorshipActivity, WebActivity::class.java))
+        var webPage = "google.com"
+        val intent = Intent(this, WebActivity::class.java)
+        intent.putExtra("webPage", webPage)
+        startActivity(intent)
     }
 
     fun getBodyMessage (preference: SharedPreferences): String {

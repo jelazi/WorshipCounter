@@ -4,14 +4,14 @@ import java.io.Serializable
 class Song (var name: String, var page: Int) : Serializable {
     var useDates: ArrayList<MyDate> = arrayListOf()
     var id: Int = 0
-    var presentation: String = ""
+    var webPage: String = ""
     var book: String = ""
 
     fun compare (anotherSong: Song):Boolean {
         if (this.id != anotherSong.id) return false
         if (this.name.compareTo(anotherSong.name, true) != 0) return false
         if (this.page != anotherSong.page) return false
-        if (this.presentation.compareTo(anotherSong.presentation, true) != 0) return false
+        if (this.webPage.compareTo(anotherSong.webPage, true) != 0) return false
         if (this.book.compareTo(anotherSong.book, true) != 0) return false
         this.useDates.forEach {
             if (!it.containsSameDate(anotherSong.useDates)) return false
@@ -20,7 +20,7 @@ class Song (var name: String, var page: Int) : Serializable {
     }
 
     fun controlCorrect () {
-        if (presentation == null) presentation = ""
+        if (webPage == null) webPage = ""
         if (book == null) book = ""
     }
 

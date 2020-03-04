@@ -45,7 +45,6 @@ class SettingsActivity : AppCompatPreference()  {
             bindPreferenceSummaryToValue(findPreference(getString(R.string.ftp_directory_today_key)))
             bindPreferenceSummaryToValue(findPreference(getString(R.string.ftp_directory_backup_key)))
 
-
             bindPreferenceSummaryToValue(findPreference(getString(R.string.smtp_address_key)))
             bindPreferenceSummaryToValue(findPreference(getString(R.string.smtp_user_name_key)))
             bindPreferenceSummaryToValue(findPreference(getString(R.string.smtp_password_key)))
@@ -54,9 +53,7 @@ class SettingsActivity : AppCompatPreference()  {
             bindPreferenceSummaryToValue(findPreference(getString(R.string.mail_to_key)))
             bindPreferenceSummaryToValue(findPreference(getString(R.string.mail_subject_key)))
             bindPreferenceSummaryToValue(findPreference(getString(R.string.mail_message_key)))
-
-
-
+            bindPreferenceSummaryToValue(findPreference(getString(R.string.book_name_key)))
         }
     }
 
