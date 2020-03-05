@@ -23,6 +23,7 @@ import kotlinx.android.synthetic.main.activity_worship.*
 import kotlinx.android.synthetic.main.part_day_item.view.*
 import java.io.File
 import java.io.OutputStream
+import java.lang.Exception
 
 class WorshipActivity : AppCompatActivity() {
 
@@ -551,18 +552,23 @@ class WorshipActivity : AppCompatActivity() {
             // Gets the image task from the incoming Message object.
             val bundle: Bundle = inputMessage.getData()
             val err = bundle.getString("error")
+            val correct = bundle.getString("correct")
             val inputString = bundle.getString("array")
           //  Log.d("TAG", inputString)
-            if (!inputString.isNullOrEmpty()) {
+            if (!correct.isNullOrEmpty()) {
                 Toast.makeText(this@WorshipActivity, "Přenos dat proběhl v pořádku.", Toast.LENGTH_LONG).show()
                 if (!inputString.isNullOrEmpty()) {
-
-                    val array = JsonParser.jsonToSongBook(inputString)
-                    for (song in array) {
-                        Books.addSong(song)
+                    try {
+                        val array = JsonParser.jsonToSongBook(inputString)
+                        for (song in array) {
+                            Books.addSong(song)
+                        }
+                        Books.sortByLastDate()
+                        BooksManager.setSongBookToPreferences(this@WorshipActivity)
+                    } catch (e: Exception) {
+                        Toast.makeText(this@WorshipActivity, "Chyba v převodu dat, je možné, že soubor se nenahrál celý. Můžete zkusit nově nahrát. Chyba: " + e, Toast.LENGTH_LONG).show()
                     }
-                    Books.sortByLastDate()
-                    BooksManager.setSongBookToPreferences(this@WorshipActivity)
+
                 }
             }
             if (!err.isNullOrEmpty()) {

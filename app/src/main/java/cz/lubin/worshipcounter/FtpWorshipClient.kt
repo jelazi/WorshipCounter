@@ -48,6 +48,7 @@ object FtpWorshipClient {
                 disconnectFtp()
                 val msg: Message = worshipActivity!!.handler.obtainMessage()
                 val bundle = Bundle()
+                bundle.putString("correct", "Nahrání dat z FTP serveru proběhlo v pořádku")
                 msg.data = bundle
                 worshipActivity!!.handler.sendMessage(msg)
 
@@ -81,7 +82,7 @@ object FtpWorshipClient {
 
                 val msg: Message = worshipActivity!!.handler.obtainMessage()
                 val bundle = Bundle()
-
+                bundle.putString("correct", "Nahrání dat z FTP serveru proběhlo v pořádku")
                 bundle.putString("array", inputString)
                 msg.data = bundle
                 worshipActivity!!.handler.sendMessage(msg)
@@ -126,6 +127,7 @@ object FtpWorshipClient {
                         Log.d("TAG", inputString.toString())
                         val msg: Message = FtpWorshipClient.worshipActivity!!.handler.obtainMessage()
                         val bundle = Bundle()
+                bundle.putString("correct", "Nahrání dat z FTP serveru proběhlo v pořádku")
                         bundle.putString("array", inputString.toString())
                         msg.data = bundle
                         worshipActivity!!.handler.sendMessage(msg)
