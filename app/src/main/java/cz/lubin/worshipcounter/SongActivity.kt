@@ -124,7 +124,7 @@ class SongActivity : AppCompatActivity() {
 
         builder.setPositiveButton("ANO"){dialog, which ->
             val newName = input.text.toString()
-            if (song!!.name.equals(newName)) {
+            if (!song!!.name.equals(newName)) {
                 if (!Books.isSameName(newName)) {
                     name_song.setText(input.text)
                     isChangeName = true

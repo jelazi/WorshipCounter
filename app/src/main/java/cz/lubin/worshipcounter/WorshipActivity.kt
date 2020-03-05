@@ -583,7 +583,7 @@ class WorshipActivity : AppCompatActivity() {
     }
 
     fun testWeb () {
-        var webPage = "google.com"
+        var webPage = "http://zizkovi.tode.cz/WorshipCounter/"
         val intent = Intent(this, WebActivity::class.java)
         intent.putExtra("webPage", webPage)
         startActivity(intent)
