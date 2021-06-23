@@ -3,9 +3,9 @@
     <string name="button2">Button</string>
 
 
-    <string name="ftp_address_value">klokanek.endora.cz</string>
-    <string name="ftp_password_value">Adventisti777</string>
-    <string name="ftp_user_name_value">worship</string>
+    <string name="ftp_address_value"></string>
+    <string name="ftp_password_value"></string>
+    <string name="ftp_user_name_value"></string>
     <string name="ftp_directory_today_value">/today/</string>
     <string name="ftp_directory_backup_value">/backup/</string>
     <string name="ftp_directory_default_value">/default/</string>
@@ -40,7 +40,7 @@
     <string name="smtp_user_name_key">smtp_user_name</string>
 
 
-    <string name="smtp_password_value">Adventisti777</string>
+    <string name="smtp_password_value"></string>
     <string name="smtp_password_title">Heslo pro mail</string>
     <string name="smtp_password_key">smtp_password</string>
 
